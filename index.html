@@ -175,11 +175,22 @@
         <h1>🇵🇱 PKO BP Ekstraklasa</h1>
         <p style="margin: 6px 0 0 0; opacity: 0.8; font-size: 1.05em;">Oficjalna tabela sezonu 2026/2027</p>
     </header>
+                                               <!-- GŁÓWNE MENU WYBORU LIGI NA SAMEJ GÓRZE STRONY -->
+        <div class="liga-section" style="margin-bottom: 20px; padding: 15px 24px;">
+            <div class="select-container" style="margin-bottom: 0;">
+                <span class="select-label" style="font-size: 1.1em;">🏆 WYBIERZ LIGĘ GLOBALNIE:</span>
+                <select id="ligaSelect" class="kolejka-select" style="font-size: 1.1em; border-width: 3px;" onchange="przelaczLigeGlowna()">
+                    <option value="ekstraklasa">🇵🇱 PKO BP Ekstraklasa</option>
+                    <option value="la_liga">🇪🇸 La Liga</option>
+                </select>
+            </div>
+        </div>
 
     <main>
                 <!-- DYNAMICZNA SEKCJA WYNIKÓW I TERMINARZA -->
         <div class="liga-section">
             <h2>📅 Wyniki Kolejek i Terminarz</h2>
+
             
             <div class="select-container">
                 <span class="select-label">Wybierz kolejkę:</span>
@@ -191,6 +202,39 @@
         </div>
 
     <script>
+               function przelaczLigeGlowna() {
+            var wybranaLiga = document.getElementById("ligaSelect").value;
+            var ekstraklasa = document.getElementById("wrapper-ekstraklasa");
+            var laliga = document.getElementById("wrapper-laliga");
+
+            // 1. ZMIANA WIELKIEGO TYTUŁU NA SAMEJ GÓRZE
+            var naglowekGlowny = document.querySelector("header h1");
+            if (naglowekGlowny) {
+                if (wybranaLiga === "ekstraklasa") naglowekGlowny.innerHTML = "🇵🇱 PKO BP Ekstraklasa";
+                else if (wybranaLiga === "la_liga") naglowekGlowny.innerHTML = "🇪🇸 La Liga";
+            }
+
+            // 2. CHOWANIE I POKAZYWANIE TABELI LIGOWYCH
+            if (wybranaLiga === "ekstraklasa") {
+                if (ekstraklasa) ekstraklasa.style.display = "block"; 
+                if (laliga) laliga.style.display = "none";     
+            } else {
+                if (ekstraklasa) ekstraklasa.style.display = "none";     
+                if (laliga) laliga.style.display = "block"; 
+            }
+
+            // 3. PRZEŁĄCZENIE TERMINARZA NA INNĄ LIGĘ
+            if (typeof inicjalizujTerminarz === "function") {
+                inicjalizujTerminarz();
+            }
+        }
+
+
+        // Powiązanie dla dolnej części skryptu
+        function zmienLige() {
+            przelaczLigeGlowna();
+        }
+
         // Słownik mapujący nazwy klubów na pliki graficzne ich herbów
                 const herbyKlubow = {
             "Górnik Zabrze": "gornik.png",
@@ -348,7 +392,7 @@
 { home: "Legia Warszawa", away: "Lech Poznań", score: "1 : 2", status: "Niedziela, 25 Października (Zakończone)" }
 ],
 13: [
-  { "home": "Cracovia", "away": "Motor Lublin", "score": "18:00", "status": "Piątek, 30.10" },
+  { "home": "Cracovia", "away": "Motor Lublin", "score": "1 : 2", "status": "Piątek, 30.10 (Zakończone)" },
   { "home": "Górnik Zabrze", "away": "Legia Warszawa", "score": "20:30", "status": "Piątek, 30.10" },
   { "home": "Wisła Płock", "away": "Piast Gliwice", "score": "12:15", "status": "Sobota, 31.10" },
   { "home": "Wieczysta Kraków", "away": "Jagiellonia Białystok", "score": "14:45", "status": "Sobota, 31.10" },
@@ -596,18 +640,27 @@
         const AKTUALNA_KOLEJKA = 13;
 
         // Generator opcji wyboru w menu (wywoływany raz przy starcie)
-        function inicjalizujTerminarz() {
+                function inicjalizujTerminarz() {
             const select = document.getElementById("kolejkaSelect");
+            if (!select) return;
             
-            for (let i = 1; i <= LICZBA_KOLEJEK; i++) {
+            // NOWOŚĆ: CZYSZCZENIE STAREGO ŚMIETNIKA PRZED DODANIEM NOWYCH KOLEJEK
+            select.innerHTML = "";
+            
+            const liga = document.getElementById("ligaSelect") ? document.getElementById("ligaSelect").value : "ekstraklasa";
+            const maxKolejek = liga === "ekstraklasa" ? LICZBA_KOLEJEK_EKSTRAKLASA : LICZBA_KOLEJEK_LALIGA;
+            const domyslnaKolejka = liga === "ekstraklasa" ? 13 : 11; // 13 dla Polski, 11 dla Hiszpanii
+
+            for (let i = 1; i <= maxKolejek; i++) {
                 const opt = document.createElement("option");
                 opt.value = i;
-                opt.innerText = `${i}. Kolejka` + (i === AKTUALNA_KOLEJKA ? " (Aktualna)" : "");
-                if (i === AKTUALNA_KOLEJKA) opt.selected = true;
+                opt.innerText = `${i}. Kolejka`;
+                if (i === domyslnaKolejka) opt.selected = true;
                 select.appendChild(opt);
             }
             renderujKolejke();
         }
+
 
         // 3. GŁÓWNY ALGORYTM WYŚWIETLANIA Z HERBAMI
         function renderujKolejke() {
@@ -615,7 +668,14 @@
             const kontener = document.getElementById("terminarzKontener");
             kontener.innerHTML = ""; 
 
-            const mecze = bazaMeczow[numerKolejki];
+                        const liga = document.getElementById("ligaSelect") ? document.getElementById("ligaSelect").value : "ekstraklasa";
+            let mecze = [];
+            if (liga === "ekstraklasa") {
+                mecze = bazaMeczow[numerKolejki];
+            } else if (typeof daneLigowe !== "undefined" && daneLigowe[liga] && daneLigowe[liga].kolejki[numerKolejki]) {
+                mecze = daneLigowe[liga].kolejki[numerKolejki];
+            }
+
 
             if (!mecze || mecze.length === 0) {
                 kontener.innerHTML = `<div style="text-align:center; padding: 30px; color: #888; font-weight: 500;">Brak szczegółowych danych dla tej kolejki w bazie algorytmu.</div>`;
@@ -666,22 +726,44 @@
 
         // Aktywacja skryptu po załadowaniu drzewa dokumentu
         window.onload = inicjalizujTerminarz;
-               // AUTOMATYCZNE OBLICZANIE I SORTOWANIE DRUŻYN NA BAZIE (Zakończone)
+        function inicjalizujTerminarz() {
+            const select = document.getElementById("kolejkaSelect");
+            if (!select) return;
+            
+            // Czyszczenie starej listy, żeby nic się nie dublowalo i nie robiło śmietnika
+            select.innerHTML = "";
+            
+            const liga = document.getElementById("ligaSelect") ? document.getElementById("ligaSelect").value : "ekstraklasa";
+            
+            // Definiujemy sztywno liczby rund dla Polski (34) i Hiszpanii (38)
+            const maxKolejek = (liga === "ekstraklasa") ? 34 : 38;
+            const domyslnaKolejka = (liga === "ekstraklasa") ? 13 : 11; 
+
+            for (let i = 1; i <= maxKolejek; i++) {
+                const opt = document.createElement("option");
+                opt.value = i;
+                opt.innerText = `${i}. Kolejka`;
+                if (i === domyslnaKolejka) opt.selected = true;
+                select.appendChild(opt);
+            }
+            renderujKolejke();
+        }
+
+                                       // AUTOMATYCZNE OBLICZANIE I SORTOWANIE DRUŻYN NA BAZIE (Zakończone)
         function automatycznaAktualizacjaTabeli() {
             const tbody = document.getElementById("tabela-pozycji");
             if (!tbody) return;
 
-            // Tworzymy mapę obiektów z wierszy HTML, aby zachować oryginalne elementy
             const wiersze = Array.from(tbody.querySelectorAll("tr"));
             const daneDruzyn = wiersze.map(tr => {
-                const nazwa = tr.cells[1].textContent.trim();
+                // Pobieramy tekst z komórki klubu i oczyszczamy go ze śmieci oraz spacji
+                const nazwa = tr.cells[1].textContent.replace(/[\n\t\r]/g, "").replace(/\s+/g, " ").trim();
                 const mecze = parseInt(tr.cells[2].textContent) || 0;
                 const bramki = tr.cells[3].textContent.split(':');
                 const bZd = parseInt(bramki[0]) || 0;
                 const bStr = parseInt(bramki[1]) || 0;
                 const pts = parseInt(tr.cells[4].textContent) || 0;
                 
-                // Pobieramy aktualne badge formy
                 const formBadges = Array.from(tr.cells[5].querySelectorAll(".form-badge")).map(span => span.textContent.trim());
 
                 return { element: tr, name: nazwa, m: mecze, bZd: bZd, bStr: bStr, pts: pts, form: formBadges };
@@ -690,13 +772,17 @@
             // Przeszukujemy bazę meczów i doliczamy statystyki tylko dla nowych zakończonych spotkań
             Object.keys(bazaMeczow).forEach(kolejkaNum => {
                 bazaMeczow[kolejkaNum].forEach(mecz => {
-                    if (mecz.status && mecz.status.includes("(Zakończone)") && !mecz.przeliczony) {
+                    if (mecz.status && (mecz.status.includes("(Zakończone)") || merytorycznyStatusZakonczony(mecz.status)) && !mecz.przeliczony) {
                         const bramkiMeczu = mecz.score.split(':');
                         const bHome = parseInt(bramkiMeczu[0]) || 0;
                         const bAway = parseInt(bramkiMeczu[1]) || 0;
 
-                        const gosp = daneDruzyn.find(d => d.name === mecz.home);
-                        const gosc = daneDruzyn.find(d => d.name === mecz.away);
+                        // Oczyszczamy nazwy z bazy meczów na wypadek spacji
+                        const meczHomeClean = mecz.home.trim();
+                        const meczAwayClean = mecz.away.trim();
+
+                        const gosp = daneDruzyn.find(d => d.name === meczHomeClean);
+                        const gosc = daneDruzyn.find(d => d.name === meczAwayClean);
 
                         if (gosp && gosc) {
                             gosp.m += 1; gosc.m += 1;
@@ -716,7 +802,6 @@
                             gosp.form = gosp.form.slice(0, 5);
                             gosc.form = gosc.form.slice(0, 5);
                         }
-                        // Oznaczamy mecz jako przeliczony, żeby nie dodawać punktów w nieskończoność
                         mecz.przeliczony = true; 
                     }
                 });
@@ -736,7 +821,6 @@
                 const poz = index + 1;
                 const tr = druzyna.element;
 
-                // Aktualizujemy komórki tekstowe w wierszu
                 tr.cells[0].textContent = poz;
                 tr.cells[2].textContent = druzyna.m;
                 tr.cells[3].textContent = `${druzyna.bZd}:${druzyna.bStr}`;
@@ -748,7 +832,6 @@
                     return `<span class="form-badge ${klasa}">${f}</span>`;
                 }).join('');
 
-                // Dynamicznie resetujemy i nadajemy paski boczne
                 tr.className = "";
                 if (poz <= 4) tr.classList.add("zone-blue");
                 if (poz >= 16) tr.classList.add("zone-relegation");
@@ -757,17 +840,199 @@
             });
         }
 
-        // Podpinamy automatyczne wywołanie funkcji przy starcie strony
-        document.addEventListener("DOMContentLoaded", function() {
-            automatycznaAktualizacjaTabeli();
-        });
+        function merytorycznyStatusZakonczony(status) {
+            return status.includes("Zakończone");
+        }
+
 
     </script>
 
+    <div class="liga-section">
+        <h2>📊 Tabela Ligowa</h2>
+        <div id="wrapper-ekstraklasa" style="display: block;">
 
-        <div class="liga-section">
-            <h2>📊 Tabela Ligowa</h2>
             
+            <table class="ekstraklasa-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">Poz</th>
+                        <th class="left-align">Klub</th>
+                        <th style="width: 60px;">Mecze</th>
+                        <th style="width: 100px;">Bramki</th>
+                        <th style="width: 70px;">Pkt</th>
+                        
+                    </tr>
+                </thead>
+                <tbody id="tabela-pozycji">
+                    <!-- 1 -->
+                    <tr class="zone-blue">
+                        <td class="pos-num">1</td>
+                        <td class="left-align team-name">
+                            <img src="herby/gornik.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Górnik Zabrze
+                        </td>
+                        <td>13</td><td>21:11</td><td class="pts-cell">28</td>
+                    
+                    </tr>
+                    <!-- 2 -->
+                    <tr class="zone-blue">
+                        <td class="pos-num">2</td>
+                        <td class="left-align team-name">
+                            <img src="herby/lech.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Lech Poznań
+                        </td>
+                        <td>11</td><td>29:10</td><td class="pts-cell">28</td>
+                        
+                    </tr>
+                    <!-- 3 -->
+                    <tr class="zone-blue">
+                        <td class="pos-num">3</td>
+                        <td class="left-align team-name">
+                            <img src="herby/legia.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Legia Warszawa
+                        </td>
+                        <td>13</td><td>23:11</td><td class="pts-cell">24</td>
+                        
+                    </tr>
+                    <!-- 4 -->
+                    <tr class="zone-blue">
+                        <td class="pos-num">4</td>
+                        <td class="left-align team-name">
+                            <img src="herby/pogon.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Pogoń Szczecin
+                        </td>
+                        <td>11</td><td>19:9</td><td class="pts-cell">24</td>
+                        
+                    </tr>
+                    <!-- 5 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">5</td>
+                        <td class="left-align team-name">
+                            <img src="herby/zaglebie.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Zagłębie Lubin
+                        </td>
+                        <td>12</td><td>15:15</td><td class="pts-cell">19</td>
+                        
+                    </tr>
+                    <!-- 6 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">6</td>
+                        <td class="left-align team-name">
+                            <img src="herby/gks-katowice.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">GKS Katowice
+                        </td>
+                        <td>12</td><td>22:17</td><td class="pts-cell">18</td>
+                        
+                    </tr>
+                    <!-- 7 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">7</td>
+                        <td class="left-align team-name">
+                            <img src="herby/wisla-krakow.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Wisła Kraków
+                        </td>
+                        <td>12</td><td>19:15</td><td class="pts-cell">21</td>
+                        
+                    </tr>
+                    <!-- 8 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">8</td>
+                        <td class="left-align team-name">
+                            <img src="herby/piast.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Piast Gliwice
+                        </td>
+                        <td>12</td><td>22:18</td><td class="pts-cell">20</td>
+                        
+                    </tr>
+                    <!-- 9 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">9</td>
+                        <td class="left-align team-name">
+                            <img src="herby/korona.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Korona Kielce
+                        </td>
+                        <td>12</td><td>14:18</td><td class="pts-cell">18</td>
+                        
+                    </tr>
+                    <!-- 10 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">10</td>
+                        <td class="left-align team-name">
+                            <img src="herby/wisla-plock.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Wisła Płock
+                        </td>
+                        <td>11</td><td>10:16</td><td class="pts-cell">14</td>
+                        
+                    </tr>
+                    <!-- 11 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">11</td>
+                        <td class="left-align team-name">
+                            <img src="herby/motor.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Motor Lublin
+                        </td>
+                        <td>13</td><td>19:22</td><td class="pts-cell">16</td>
+                        
+                    </tr>
+                    <!-- 12 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">12</td>
+                        <td class="left-align team-name">
+                            <img src="herby/cracovia.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Cracovia
+                        </td>
+                        <td>13</td><td>15:21</td><td class="pts-cell">12</td>
+                        
+                    </tr>
+                    <!-- 13 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">13</td>
+                        <td class="left-align team-name">
+                            <img src="herby/jagiellonia.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Jagiellonia Białystok
+                        </td>
+                        <td>11</td><td>14:17</td><td class="pts-cell">15</td>
+                        
+                    </tr>
+                    <!-- 14 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">14</td>
+                        <td class="left-align team-name">
+                            <img src="herby/widzew.png" alt="🔴" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Widzew Łódź
+                        </td>
+                        <td>12</td><td>15:16</td><td class="pts-cell">11</td>
+                       
+                    </tr>
+                    <!-- 15 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">15</td>
+                        <td class="left-align team-name">
+                            <img src="herby/wieczysta.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Wieczysta Kraków
+                        </td>
+                        <td>12</td><td>16:23</td><td class="pts-cell">8</td>
+                        
+                    </tr>
+                    <!-- 16 (Strefa spadkowa) -->
+                    <tr class="zone-relegation">
+                        <td class="pos-num">16</td>
+                        <td class="left-align team-name">
+                            <img src="herby/radomiak.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Radomiak Radom
+                        </td>
+                        <td>12</td><td>12:28</td><td class="pts-cell">8</td>
+                        
+                    </tr>
+                    <!-- 17 (Strefa spadkowa) -->
+                    <tr class="zone-relegation">
+                        <td class="pos-num">17</td>
+                        <td class="left-align team-name">
+                            <img src="herby/slask.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Śląsk Wrocław
+                        </td>
+                        <td>12</td><td>16:22</td><td class="pts-cell">9</td>
+                        
+                    </tr>
+                    <!-- 18 (Strefa spadkowa) -->
+                    <tr class="zone-relegation">
+                        <td class="pos-num">18</td>
+                        <td class="left-align team-name">
+                            <img src="herby/rakow.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Raków Częstochowa
+                        </td>
+                        <td>12</td><td>16:28</td><td class="pts-cell">6</td>
+                        
+                    </tr>
+                 </tbody>
+            </table>
+        </div> <!-- 🔴 TUTAJ ZAMYKAMY POLSKĄ SZUFLADĘ WRAPPER-EKSTRAKLASA -->
+
+        <!-- 🇪🇸 A TUTAJ JEST CZYSTA HISZPAŃSKA SZUFLADA, KTÓRA BĘDZIE PUSTA -->
+        <div id="wrapper-laliga" style="display: none;">
+
             <table class="ekstraklasa-table">
                 <thead>
                     <tr>
@@ -779,7 +1044,8 @@
                         <th style="width: 140px;">Ostatnie 5 meczów</th>
                     </tr>
                 </thead>
-                <tbody id="tabela-pozycji">
+                <tbody>
+ 
                     <!-- 1 -->
                     <tr class="zone-blue">
                         <td class="pos-num">1</td>
@@ -787,7 +1053,7 @@
                             <img src="herby/gornik.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Górnik Zabrze
                         </td>
                         <td>11</td><td>20:10</td><td class="pts-cell">26</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-r">R</span><span class="form-badge form-w">W</span><span class="form-badge form-r">R</span></td>
+                        <td><span class="form-badge form-w"></span><span class="form-badge form-w"></span><span class="form-badge form-r"></span><span class="form-badge form-w"></span><span class="form-badge form-r"></span></td>
                     </tr>
                     <!-- 2 -->
                     <tr class="zone-blue">
@@ -915,25 +1181,43 @@
                         <td>11</td><td>16:21</td><td class="pts-cell">8</td>
                         <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
                     </tr>
-                    <!-- 16 (Strefa spadkowa) -->
-                    <tr class="zone-relegation">
-                        <td class="pos-num">16</td>
+                    <!-- 15 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">15</td>
                         <td class="left-align team-name">
-                            <img src="herby/radomiak.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Radomiak Radom
+                            <img src="herby/wieczysta.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Wieczysta Kraków
                         </td>
-                        <td>11</td><td>9:24</td><td class="pts-cell">8</td>
+                        <td>11</td><td>16:21</td><td class="pts-cell">8</td>
                         <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
                     </tr>
-                    <!-- 17 (Strefa spadkowa) -->
-                    <tr class="zone-relegation">
-                        <td class="pos-num">17</td>
+                    <!-- 17 -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">15</td>
                         <td class="left-align team-name">
-                            <img src="herby/slask.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Śląsk Wrocław
+                            <img src="herby/wieczysta.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Wieczysta Kraków
                         </td>
-                        <td>11</td><td>14:22</td><td class="pts-cell">6</td>
+                        <td>11</td><td>16:21</td><td class="pts-cell">8</td>
                         <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
                     </tr>
                     <!-- 18 (Strefa spadkowa) -->
+                    <tr class="zone-relegation">
+                        <td class="pos-num">18</td>
+                        <td class="left-align team-name">
+                            <img src="herby/rakow.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Raków Częstochowa
+                        </td>
+                        <td>11</td><td>15:26</td><td class="pts-cell">6</td>
+                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                    </tr>
+                    <!-- 19 (Strefa spadkowa) -->
+                    <tr class="zone-relegation">
+                        <td class="pos-num">18</td>
+                        <td class="left-align team-name">
+                            <img src="herby/rakow.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Raków Częstochowa
+                        </td>
+                        <td>11</td><td>15:26</td><td class="pts-cell">6</td>
+                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                    </tr>
+                     <!-- 20 (Strefa spadkowa) -->
                     <tr class="zone-relegation">
                         <td class="pos-num">18</td>
                         <td class="left-align team-name">
