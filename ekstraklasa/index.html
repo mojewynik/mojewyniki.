@@ -5,25 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ekstraklasa - Tabela Ligowa</title>
     <style>
+        /* Reset podstawowych marginesów */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
             color: #333;
         }
-        header {
-            background: linear-gradient(135deg, #002f6c 0%, #001838 100%);
+
+        /* GŁÓWNY CIEMNY PASEK */
+        .top-bar {
+            background: linear-gradient(180deg, #001d42, #00142d);
             color: white;
             text-align: center;
-            padding: 30px 0 20px 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 22px 10px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.2em;
-            letter-spacing: 0.5px;
+
+        .top-bar h1 {
+            font-size: 1.55rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            margin-bottom: 5px;
         }
+
+        .top-bar h1 span {
+            font-size: 0.95rem;
+            font-weight: 400;
+            opacity: 0.85;
+            margin-right: 6px;
+            text-transform: uppercase;
+        }
+
+        .top-bar p {
+            font-size: 0.78rem;
+            opacity: 0.65;
+            font-weight: 300;
+            letter-spacing: 0.2px;
+        }
+
+        /* MNIEJSZY PASEK Z WYBOREM LIG */
+        .league-bar {
+            background-color: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .league-btn {
+            background: none;
+            border: none;
+            color: #495057;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .league-btn:hover {
+            background-color: #e9ecef;
+            color: #001d42;
+        }
+
+        .league-btn.active {
+            background-color: #001d42;
+            color: #ffffff;
+        }
+
+        /* TWOJE NOWE STYLE KLAS TABELI I ELEMENTÓW */
         main {
             max-width: 900px;
             margin: 30px auto;
@@ -34,16 +93,6 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
             padding: 24px;
-        }
-        h2 {
-            color: #002f6c;
-            border-bottom: 3px solid #ff6e40;
-            padding-bottom: 10px;
-            margin-top: 0;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.6em;
         }
         .ekstraklasa-table {
             width: 100%;
@@ -87,22 +136,6 @@
         
         .team-name { font-weight: 600; color: #222; }
         .pts-cell { font-weight: bold; color: #002f6c; background-color: rgba(0, 47, 108, 0.04); }
-        
-        .form-badge {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            line-height: 20px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            font-weight: bold;
-            color: white;
-            margin: 0 1px;
-            text-align: center;
-        }
-        .form-w { background-color: #2e7d32; }
-        .form-r { background-color: #757575; }
-        .form-p { background-color: #c62828; }
 
         .legend {
             display: flex;
@@ -116,656 +149,556 @@
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .dot-blue { background-color: #1565c0; }
         .dot-red { background-color: #c62828; }
-        /* STYLE DLA WYNIKÓW I TERMINARZA */
-        .sekcja-podzialu {
-            background-color: #002f6c;
-            color: white;
-            font-weight: bold;
-            text-align: left !important;
-            padding: 10px 15px !important;
-            font-size: 1.1em;
-            letter-spacing: 0.5px;
-        }
-        .mecz-row {
-            background-color: #fcfdfe;
-        }
-        .mecz-flex {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            padding: 15px 0;
-        }
-        .mecz-team {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            width: 180px;
-        }
-        .mecz-team.home { justify-content: flex-end; text-align: right; }
-        .mecz-team.away { justify-content: flex-start; text-align: left; }
-        .mecz-logo-mini { height: 20px; width: auto; vertical-align: middle; }
-        
-        .mecz-score {
-            background-color: #002f6c;
-            color: white;
-            font-weight: bold;
-            padding: 3px 12px;
-            border-radius: 4px;
-            display: inline-block;
-            min-width: 35px;
-            text-align: center;
-        }
-        .mecz-date {
-            background-color: #f0f2f5;
-            color: #555;
-            font-weight: 500;
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 0.85em;
-            display: inline-block;
-        }
 
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>🇵🇱 PKO BP Ekstraklasa</h1>
-        <p style="margin: 6px 0 0 0; opacity: 0.8; font-size: 1.05em;">Oficjalna tabela sezonu 2026/2027</p>
-    </header>
-
-    <main>
-                <!-- DYNAMICZNA SEKCJA WYNIKÓW I TERMINARZA -->
-        <div class="liga-section">
-            <h2>📅 Wyniki Kolejek i Terminarz</h2>
-            
-            <div class="select-container">
-                <span class="select-label">Wybierz kolejkę:</span>
-                <select id="kolejkaSelect" class="kolejka-select" onchange="renderujKolejke()"></select>
-            </div>
-
-            <!-- Kontener na mecze generowane przez algorytm -->
-            <div id="terminarzKontener"></div>
+<!-- Główny dynamiczny pasek z dodanym logo ligi -->
+<div class="top-bar">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+        <!-- To logo będzie się zmieniać dynamicznie dzięki skryptowi -->
+        <img id="league-logo" src="herby/logo-ekstraklasa.png" alt="" style="height: 45px; width: auto; vertical-align: middle;">
+        <div>
+            <h1 id="main-title"><span id="country-tag">PL</span> PKO BP Ekstraklasa</h1>
+            <p id="sub-title">Oficjalna tabela sezonu 2026/2027</p>
         </div>
+    </div>
+</div>
 
-    <script>
-        // Słownik mapujący nazwy klubów na pliki graficzne ich herbów
-                const herbyKlubow = {
-            "Górnik Zabrze": "gornik.png",
-            "Lech Poznań": "lech.png",
-            "Legia Warszawa": "legia.png",
-            "Pogoń Szczecin": "pogon.png",
-            "Zagłębie Lubin": "zaglebie.png",
-            "GKS Katowice": "gks-katowice.png",
-            "Wisła Kraków": "wisla-krakow.png",
-            "Piast Gliwice": "piast.png",
-            "Korona Kielce": "korona.png",
-            "Wisła Płock": "wisla-plock.png",
-            "Motor Lublin": "motor.png",
-            "Cracovia": "cracovia.png",
-            "Jagiellonia Białystok": "jagiellonia.png",
-            "Widzew Łódź": "widzew.png",
-            "Wieczysta Kraków": "wieczysta.png",
-            "Radomiak Radom": "radomiak.png",
-            "Śląsk Wrocław": "slask.png",
-            "Raków Częstochowa": "rakow.png"
-        };
 
-           // 1. GIGANTYCZNA, KOMPLETNA BAZA DANYCH SEZONU (WSZYSTKIE MECZE KOLEJEK 1-34)
-        const bazaMeczow = {
-            1: [
-                { home: "Radomiak Radom", away: "Wieczysta Kraków", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "Pogoń Szczecin", away: "Legia Warszawa", score: "0 : 1", status: "Mecze rozegrane" },
-                { home: "Jagiellonia Białystok", away: "Korona Kielce", score: "1 : 0", status: "Mecze rozegrane" },
-                { home: "Górnik Zabrze", away: "Śląsk Wrocław", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "Lech Poznań", away: "Cracovia", score: "0 : 0", status: "Mecze rozegrane" },
-                { home: "Raków Częstochowa", away: "Wisła Płock", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Widzew Łódź", away: "Motor Lublin", score: "2 : 2", status: "Mecze rozegrane" },
-                { home: "Wisła Kraków", away: "GKS Katowice", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "Zagłębie Lubin", away: "Piast Gliwice", score: "2 : 0", status: "Mecze rozegrane" }
-            ],
-            2: [
-                { home: "Wieczysta Kraków", away: "Pogoń Szczecin", score: "2 : 2", status: "Mecze rozegrane" },
-                { home: "Legia Warszawa", away: "Jagiellonia Białystok", score: "3 : 1", status: "Mecze rozegrane" },
-                { home: "Korona Kielce", away: "Górnik Zabrze", score: "0 : 2", status: "Mecze rozegrane" },
-                { home: "Śląsk Wrocław", away: "Lech Poznań", score: "0 : 3", status: "Mecze rozegrane" },
-                { home: "Cracovia", away: "Raków Częstochowa", score: "2 : 0", status: "Mecze rozegrane" },
-                { home: "Wisła Płock", away: "Widzew Łódź", score: "1 : 1", status: "Mecze rozegrane" },
-                { home: "Motor Lublin", away: "Wisła Kraków", score: "1 : 3", status: "Mecze rozegrane" },
-                { home: "GKS Katowice", away: "Zagłębie Lubin", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "Piast Gliwice", away: "Radomiak Radom", score: "3 : 1", status: "Mecze rozegrane" }
-            ],
-            3: [
-                { home: "Górnik Zabrze", away: "Legia Warszawa", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Lech Poznań", away: "Korona Kielce", score: "4 : 1", status: "Mecze rozegrane" },
-                { home: "Raków Częstochowa", away: "Śląsk Wrocław", score: "0 : 2", status: "Mecze rozegrane" },
-                { home: "Widzew Łódź", away: "Cracovia", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Wisła Kraków", away: "Wisła Płock", score: "2 : 0", status: "Mecze rozegrane" },
-                { home: "Zagłębie Lubin", away: "Motor Lublin", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Radomiak Radom", away: "GKS Katowice", score: "0 : 3", status: "Mecze rozegrane" },
-                { home: "Pogoń Szczecin", away: "Piast Gliwice", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "Jagiellonia Białystok", away: "Wieczysta Kraków", score: "1 : 2", status: "Mecze rozegrane" }
-            ],
-            4: [
-                { home: "Legia Warszawa", away: "Lech Poznań", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Korona Kielce", away: "Raków Częstochowa", score: "3 : 0", status: "Mecze rozegrane" },
-                { home: "Śląsk Wrocław", away: "Widzew Łódź", score: "1 : 1", status: "Mecze rozegrane" },
-                { home: "Cracovia", away: "Wisła Kraków", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Wisła Płock", away: "Zagłębie Lubin", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Motor Lublin", away: "Radomiak Radom", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "GKS Katowice", away: "Pogoń Szczecin", score: "1 : 3", status: "Mecze rozegrane" },
-                { home: "Piast Gliwice", away: "Jagiellonia Białystok", score: "2 : 2", status: "Mecze rozegrane" },
-                { home: "Wieczysta Kraków", away: "Górnik Zabrze", score: "1 : 3", status: "Mecze rozegrane" }
-            ],
-            5: [
-                { home: "Raków Częstochowa", away: "Legia Warszawa", score: "0 : 3", status: "Mecze rozegrane" },
-                { home: "Widzew Łódź", away: "Korona Kielce", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "Wisła Kraków", away: "Śląsk Wrocław", score: "3 : 0", status: "Mecze rozegrane" },
-                { home: "Zagłębie Lubin", away: "Cracovia", score: "0 : 2", status: "Mecze rozegrane" },
-                { home: "Radomiak Radom", away: "Wisła Płock", score: "0 : 1", status: "Mecze rozegrane" },
-                { home: "Pogoń Szczecin", away: "Motor Lublin", score: "3 : 0", status: "Mecze rozegrane" },
-                { home: "Jagiellonia Białystok", away: "GKS Katowice", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Górnik Zabrze", away: "Piast Gliwice", score: "2 : 0", status: "Mecze rozegrane" },
-                { home: "Lech Poznań", away: "Wieczysta Kraków", score: "3 : 1", status: "Mecze rozegrane" }
-            ],
-            6: [
-                { home: "Legia Warszawa", away: "Widzew Łódź", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "Korona Kielce", away: "Wisła Kraków", score: "1 : 1", status: "Mecze rozegrane" },
-                { home: "Śląsk Wrocław", away: "Zagłębie Lubin", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Cracovia", away: "Radomiak Radom", score: "1 : 1", status: "Mecze rozegrane" },
-                { home: "Wisła Płock", away: "Pogoń Szczecin", score: "0 : 2", status: "Mecze rozegrane" },
-                { home: "Motor Lublin", away: "Jagiellonia Białystok", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "GKS Katowice", away: "Górnik Zabrze", score: "1 : 3", status: "Mecze rozegrane" },
-                { home: "Piast Gliwice", away: "Lech Poznań", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Wieczysta Kraków", away: "Raków Częstochowa", score: "2 : 0", status: "Mecze rozegrane" }
-            ],
-            7: [
-                { home: "Wisła Kraków", away: "Legia Warszawa", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Zagłębie Lubin", away: "Korona Kielce", score: "2 : 0", status: "Mecze rozegrane" },
-                { home: "Radomiak Radom", away: "Śląsk Wrocław", score: "1 : 0", status: "Mecze rozegrane" },
-                { home: "Pogoń Szczecin", away: "Cracovia", score: "3 : 0", status: "Mecze rozegrane" },
-                { home: "Jagiellonia Białystok", away: "Wisła Płock", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "Górnik Zabrze", away: "Motor Lublin", score: "4 : 1", status: "Mecze rozegrane" },
-                { home: "Lech Poznań", away: "GKS Katowice", score: "1 : 1", status: "Mecze rozegrane" },
-                { home: "Raków Częstochowa", away: "Piast Gliwice", score: "0 : 3", status: "Mecze rozegrane" },
-                { home: "Widzew Łódź", away: "Wieczysta Kraków", score: "1 : 2", status: "Mecze rozegrane" }
-            ],
-            8: [
-                { home: "Legia Warszawa", away: "Zagłębie Lubin", score: "3 : 1", status: "Mecze rozegrane" },
-                { home: "Korona Kielce", away: "Radomiak Radom", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "Śląsk Wrocław", away: "Pogoń Szczecin", score: "0 : 2", status: "Mecze rozegrane" },
-                { home: "Cracovia", away: "Jagiellonia Białystok", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Wisła Płock", away: "Górnik Zabrze", score: "1 : 3", status: "Mecze rozegrane" },
-                { home: "Motor Lublin", away: "Lech Poznań", score: "1 : 3", status: "Mecze rozegrane" },
-                { home: "GKS Katowice", away: "Raków Częstochowa", score: "3 : 0", status: "Mecze rozegrane" },
-                { home: "Piast Gliwice", away: "Widzew Łódź", score: "2 : 2", status: "Mecze rozegrane" },
-                { home: "Wieczysta Kraków", away: "Wisła Kraków", score: "1 : 3", status: "Mecze rozegrane" }
-            ],
-            9: [
-                { home: "Radomiak Radom", away: "Legia Warszawa", score: "0 : 2", status: "Mecze rozegrane" },
-                { home: "Pogoń Szczecin", away: "Korona Kielce", score: "1 : 0", status: "Mecze rozegrane" },
-                { home: "Jagiellonia Białystok", away: "Śląsk Wrocław", score: "2 : 0", status: "Mecze rozegrane" },
-                { home: "Górnik Zabrze", away: "Cracovia", score: "2 : 1", status: "Mecze rozegrane" },
-                { home: "Lech Poznań", away: "Wisła Płock", score: "2 : 0", status: "Mecze rozegrane" },
-                { home: "Raków Częstochowa", away: "Motor Lublin", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Widzew Łódź", away: "GKS Katowice", score: "1 : 2", status: "Mecze rozegrane" },
-                { home: "Wisła Kraków", away: "Piast Gliwice", score: "1 : 1", status: "Mecze rozegrane" },
-                { home: "Zagłębie Lubin", away: "Wieczysta Kraków", score: "1 : 2", status: "Mecze rozegrane" }
-            ],
-            10: [
-                { home: "Wieczysta Kraków", away: "Wisła Płock", score: "3 : 0", status: "Mecze rozegrane" },
-                { home: "Raków Częstochowa", away: "GKS Katowice", score: "1 : 4", status: "Mecze rozegrane" },
-                { home: "Cracovia", away: "Zagłębie Lubin", score: "3 : 1", status: "Mecze rozegrane" },
-                { home: "Śląsk Wrocław", away: "Lech Poznań", score: "1 : 4", status: "Mecze rozegrane" },
-                { home: "Jagiellonia Białystok", away: "Górnik Zabrze", score: "1 : 3", status: "Mecze rozegrane" },
-                { home: "Piast Gliwice", away: "Widzew Łódź", score: "2 : 1", status: "Mecze rozegrane" },
-{ home: "Pogoń Szczecin", away: "Korona Kielce", score: "2 : 0", status: "Mecze rozegrane" },
-{ home: "Legia Warszawa", away: "Wisła Kraków", score: "2 : 0", status: "Mecze rozegrane" },
-{ home: "Radomiak Radom", away: "Motor Lublin", score: "2 : 3", status: "Mecze rozegrane" }
+<!-- Pasek wyboru lig -->
+<div class="league-bar">
+    <button class="league-btn active" onclick="selectLeague('PL', 'PKO BP Ekstraklasa', 'Oficjalna tabela sezonu 2026/2027', this, true)">Ekstraklasa</button>
+    <button class="league-btn" onclick="selectLeague('ES', 'La Liga', 'Oficjalna tabela sezonu 2026/2027', this, false)">La Liga</button>
+    <button class="league-btn" onclick="selectLeague('UK', 'Premier League', 'Oficjalna tabela sezonu 2026/2027', this, false)">Premier League</button>
+</div>
+
+
+
+            <div class="liga-section">
+<!-- ========================================================================= -->
+<!-- POCZĄTEK FRAGMENTU: Profesjonalny Terminarz z podziałem na dni i herby   -->
+<!-- ========================================================================= -->
+<div class="header-row" style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 15px; font-family: 'Segoe UI', Helvetica, sans-serif;">
+    <h2 style="margin: 0; font-size: 18px; color: #002d72; font-weight: bold;">Wybierz kolejkę:</h2>
+    
+    <select id="kolejkaSelect" onchange="zmienKolejkeEkstraklasa()" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; outline: none; background-color: #fff;">
+        <option value="1">1. Kolejka</option>
+        <option value="2">2. Kolejka</option>
+        <option value="3">3. Kolejka</option>
+        <option value="4">4. Kolejka</option>
+        <option value="5">5. Kolejka</option>
+        <option value="6">6. Kolejka</option>
+        <option value="7">7. Kolejka</option>
+        <option value="8">8. Kolejka</option>
+        <option value="9">9. Kolejka</option>
+        <option value="10">10. Kolejka</option>
+        <option value="11">11. Kolejka</option>
+        <option value="12">12. Kolejka</option>
+        <option value="13" selected>13. Kolejka (Aktualna)</option>
+        <option value="14">14. Kolejka</option>
+        <option value="15">15. Kolejka</option>
+        <option value="16">16. Kolejka</option>
+        <option value="17">17. Kolejka</option>
+        <option value="18">18. Kolejka</option>
+        <option value="19">19. Kolejka</option>
+        <option value="20">20. Kolejka</option>
+        <option value="21">21. Kolejka</option>
+        <option value="22">22. Kolejka</option>
+        <option value="23">23. Kolejka</option>
+        <option value="24">24. Kolejka</option>
+        <option value="25">25. Kolejka</option>
+        <option value="26">26. Kolejka</option>
+        <option value="27">27. Kolejka</option>
+        <option value="28">28. Kolejka</option>
+        <option value="29">29. Kolejka</option>
+        <option value="30">30. Kolejka</option>
+        <option value="31">31. Kolejka</option>
+        <option value="32">32. Kolejka</option>
+        <option value="33">33. Kolejka</option>
+        <option value="34">34. Kolejka</option>
+    </select>
+</div>
+
+<div id="kontenerMeczowEkstraklasa" style="font-family: 'Segoe UI', Helvetica, sans-serif; margin-bottom: 25px;"></div>
+
+
+<script>
+// Prosta struktura danych - dopisujesz mecz po meczu, a JS sam pogrupuje je według "status"
+const meczeEkstraklasy = {
+    1: [
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Piątek, 24 lipca 2026" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Piątek, 24 lipca 2026" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Sobota, 25 lipca 2026" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Sobota, 25 lipca 2026" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Sobota, 25 lipca 2026" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Niedziela, 26 lipca 2026" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Niedziela, 26 lipca 2026" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Niedziela, 26 lipca 2026" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Poniedziałek, 27 lipca 2026" }
 ],
+
+2: [
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Piątek, 31 lipca 2026" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Piątek, 31 lipca 2026" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Sobota, 1 sierpnia 2026" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Sobota, 1 sierpnia 2026" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Niedziela, 2 sierpnia 2026" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Niedziela, 2 sierpnia 2026" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Niedziela, 2 sierpnia 2026" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Poniedziałek, 3 sierpnia 2026" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Wtorek, 15 września 2026" }
+],
+
+3: [
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Piątek, 7 sierpnia 2026" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Sobota, 8 sierpnia 2026" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Sobota, 8 sierpnia 2026" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Sobota, 8 sierpnia 2026" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Niedziela, 9 sierpnia 2026" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Niedziela, 9 sierpnia 2026" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Niedziela, 9 sierpnia 2026" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Wtorek, 15 września 2026" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Poniedziałek, 12 października 2026" }
+],
+
+4: [
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Piątek, 14 sierpnia 2026" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Sobota, 15 sierpnia 2026" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Sobota, 15 sierpnia 2026" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Sobota, 15 sierpnia 2026" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Niedziela, 16 sierpnia 2026" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Niedziela, 16 sierpnia 2026" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Niedziela, 16 sierpnia 2026" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Środa, 16 grudnia 2026" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Czwartek, 17 grudnia 2026" }
+],
+
+5: [
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Piątek, 21 sierpnia 2026" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Sobota, 22 sierpnia 2026" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Sobota, 22 sierpnia 2026" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Sobota, 22 sierpnia 2026" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Niedziela, 23 sierpnia 2026" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Niedziela, 23 sierpnia 2026" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Niedziela, 23 sierpnia 2026" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Czwartek, 3 września 2026" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Czwartek, 3 września 2026" }
+],
+
+6: [
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Piątek, 28 sierpnia 2026" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Piątek, 28 sierpnia 2026" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Sobota, 29 sierpnia 2026" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Sobota, 29 sierpnia 2026" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Sobota, 29 sierpnia 2026" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Sobota, 29 sierpnia 2026" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Niedziela, 30 sierpnia 2026" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Niedziela, 30 sierpnia 2026" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Niedziela, 30 sierpnia 2026" }
+],
+
+7: [
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Piątek, 4 września 2026" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Sobota, 5 września 2026" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Sobota, 5 września 2026" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Sobota, 5 września 2026" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Niedziela, 6 września 2026" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Niedziela, 6 września 2026" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Niedziela, 6 września 2026" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Poniedziałek, 7 września 2026" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Poniedziałek, 7 września 2026" }
+],
+
+8: [
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Piątek, 11 września 2026" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Piątek, 11 września 2026" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Sobota, 12 września 2026" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Sobota, 12 września 2026" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Sobota, 12 września 2026" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Niedziela, 13 września 2026" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Niedziela, 13 września 2026" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Niedziela, 13 września 2026" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Poniedziałek, 14 września 2026" }
+],
+
+9: [
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Piątek, 18 września 2026" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Piątek, 18 września 2026" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Sobota, 19 września 2026" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Sobota, 19 września 2026" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Sobota, 19 września 2026" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Niedziela, 20 września 2026" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Niedziela, 20 września 2026" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Niedziela, 20 września 2026" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Niedziela, 20 września 2026" }
+],
+
+10: [
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Piątek, 9 października 2026" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Piątek, 9 października 2026" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Sobota, 10 października 2026" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Sobota, 10 października 2026" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Sobota, 10 października 2026" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Niedziela, 11 października 2026" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Niedziela, 11 października 2026" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Niedziela, 11 października 2026" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Poniedziałek, 12 października 2026" }
+],
+
 11: [
-{ home: "Wieczysta Kraków", away: "Raków Częstochowa", score: "1 : 2", status: "Mecze rozegrane" },
-{ home: "Widzew Łódź", away: "Wisła Kraków", score: "0 : 0", status: "Mecze rozegrane" },
-{ home: "Motor Lublin", away: "Śląsk Wrocław", score: "3 : 2", status: "Mecze rozegrane" },
-{ home: "GKS Katowice", away: "Pogoń Szczecin", score: "0 : 1", status: "Mecze rozegrane" },
-{ home: "Cracovia", away: "Legia Warszawa", score: "1 : 1", status: "Mecze rozegrane" },
-{ home: "Górnik Zabrze", away: "Piast Gliwice", score: "1 : 1", status: "Mecze rozegrane" },
-{ home: "Zagłębie Lubin", away: "Jagiellonia Białystok", score: "1 : 0", status: "Mecze rozegrane" },
-{ home: "Lech Poznań", away: "Korona Kielce", score: "6 : 1", status: "Mecze rozegrane" },
-{ home: "Wisła Płock", away: "Radomiak Radom", score: "1 : 0", status: "Mecze rozegrane" }
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Piątek, 16 października 2026" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Piątek, 16 października 2026" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Sobota, 17 października 2026" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Sobota, 17 października 2026" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Sobota, 17 października 2026" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Niedziela, 18 października 2026" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Niedziela, 18 października 2026" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Niedziela, 18 października 2026" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Poniedziałek, 19 października 2026" }
 ],
+
 12: [
-{ home: "Motor Lublin", away: "Zagłębie Lubin", score: "2 : 2", status: "Piątek, 23 Października (Zakończone)" },
-{ home: "Widzew Łódź", away: "Górnik Zabrze", score: "1 : 1", status: "Piątek, 23 Października (Zakończone)" },
-{ home: "Piast Gliwice", away: "Cracovia", score: "3 : 1", status: "Sobota, 24 Października (Zakończone)" },
-{ home: "Korona Kielce", away: "GKS Katowice", score: "1 : 0", status: "Sobota, 24 Października (Zakończone)" },
-{ home: "Pogoń Szczecin", away: "Radomiak Radom", score: "4 : 3", status: "Sobota, 24 Października (Zakończone)" },
-{ home: "Wisła Kraków", away: "Raków Częstochowa", score: "2 : 1", status: "Sobota, 24 Października (Zakończone)" },
-{ home: "Śląsk Wrocław", away: "Wieczysta Kraków", score: "2 : 0", status: "Niedziela, 25 Października (Zakończone)" },
-{ home: "Jagiellonia Białystok", away: "Wisła Płock", score: "1 : 0", status: "Niedziela, 25 Października (Zakończone)" },
-{ home: "Legia Warszawa", away: "Lech Poznań", score: "1 : 2", status: "Niedziela, 25 Października (Zakończone)" }
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Piątek, 23 października 2026" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Piątek, 23 października 2026" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Sobota, 24 października 2026" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Sobota, 24 października 2026" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Sobota, 24 października 2026" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Sobota, 24 października 2026" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Niedziela, 25 października 2026" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Niedziela, 25 października 2026" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Niedziela, 25 października 2026" }
 ],
 13: [
-  { "home": "Cracovia", "away": "Motor Lublin", "score": "18:00", "status": "Piątek, 30.10" },
-  { "home": "Górnik Zabrze", "away": "Legia Warszawa", "score": "20:30", "status": "Piątek, 30.10" },
-  { "home": "Wisła Płock", "away": "Piast Gliwice", "score": "12:15", "status": "Sobota, 31.10" },
-  { "home": "Wieczysta Kraków", "away": "Jagiellonia Białystok", "score": "14:45", "status": "Sobota, 31.10" },
-  { "home": "Lech Poznań", "away": "Wisła Kraków", "score": "17:30", "status": "Sobota, 31.10" },
-  { "home": "GKS Katowice", "away": "Widzew Łódź", "score": "20:15", "status": "Sobota, 31.10" },
-  { "home": "Radomiak Radom", "away": "Śląsk Wrocław", "score": "18:00", "status": "Poniedziałek, 2.11" },
-  { "home": "Zagłębie Lubin", "away": "Korona Kielce", "score": "18:00", "status": "Poniedziałek, 2.11" },
-  { "home": "Raków Częstochowa", "away": "Pogoń Szczecin", "score": "20:30", "status": "Poniedziałek, 2.11" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Piątek, 30 października 2026" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Piątek, 30 października 2026" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Sobota, 31 października 2026" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Sobota, 31 października 2026" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Sobota, 31 października 2026" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Sobota, 31 października 2026" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Poniedziałek, 2 listopada 2026" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Poniedziałek, 2 listopada 2026" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Poniedziałek, 2 listopada 2026" }
 ],
+
 14: [
-  { "home": "Motor Lublin", "away": "Wisła Płock", "score": "18:00", "status": "Piątek, 6.11" },
-  { "home": "Wisła Kraków", "away": "Cracovia", "score": "20:30", "status": "Piątek, 6.11" },
-  { "home": "Korona Kielce", "away": "Radomiak Radom", "score": "12:15", "status": "Sobota, 7.11" },
-  { "home": "Śląsk Wrocław", "away": "Piast Gliwice", "score": "14:45", "status": "Sobota, 7.11" },
-  { "home": "Górnik Zabrze", "away": "Wieczysta Kraków", "score": "17:30", "status": "Sobota, 7.11" },
-  { "home": "Widzew Łódź", "away": "Pogoń Szczecin", "score": "20:15", "status": "Sobota, 7.11" },
-  { "home": "Jagiellonia Białystok", "away": "GKS Katowice", "score": "14:45", "status": "Niedziela, 8.11" },
-  { "home": "Legia Warszawa", "away": "Raków Częstochowa", "score": "17:30", "status": "Niedziela, 8.11" },
-  { "home": "Lech Poznań", "away": "Zagłębie Lubin", "score": "20:15", "status": "Niedziela, 8.11" }
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Piątek, 6 listopada 2026" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Piątek, 6 listopada 2026" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Sobota, 7 listopada 2026" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Sobota, 7 listopada 2026" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Sobota, 7 listopada 2026" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Sobota, 7 listopada 2026" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Niedziela, 8 listopada 2026" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Niedziela, 8 listopada 2026" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Niedziela, 8 listopada 2026" }
 ],
+
 15: [
-  { "home": "Piast Gliwice", "away": "Korona Kielce", "score": "18:00", "status": "Piątek, 20.11" },
-  { "home": "Pogoń Szczecin", "away": "Śląsk Wrocław", "score": "20:30", "status": "Piątek, 20.11" },
-  { "home": "Cracovia", "away": "Jagiellonia Białystok", "score": "14:45", "status": "Sobota, 21.11" },
-  { "home": "Zagłębie Lubin", "away": "Górnik Zabrze", "score": "17:30", "status": "Sobota, 21.11" },
-  { "home": "Radomiak Radom", "away": "Wisła Kraków", "score": "20:15", "status": "Sobota, 21.11" },
-  { "home": "Raków Częstochowa", "away": "Widzew Łódź", "score": "12:15", "status": "Niedziela, 22.11" },
-  { "home": "GKS Katowice", "away": "Lech Poznań", "score": "14:45", "status": "Niedziela, 22.11" },
-  { "home": "Wisła Płock", "away": "Legia Warszawa", "score": "17:30", "status": "Niedziela, 22.11" },
-  { "home": "Wieczysta Kraków", "away": "Motor Lublin", "score": "19:00", "status": "Poniedziałek, 23.11" }
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Piątek, 20 listopada 2026" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Piątek, 20 listopada 2026" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Sobota, 21 listopada 2026" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Sobota, 21 listopada 2026" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Sobota, 21 listopada 2026" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Niedziela, 22 listopada 2026" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Niedziela, 22 listopada 2026" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Niedziela, 22 listopada 2026" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Poniedziałek, 23 listopada 2026" }
 ],
+
 16: [
-  { "home": "Korona Kielce", "away": "Cracovia", "score": "18:00", "status": "Sobota, 28.11" },
-  { "home": "Wisła Kraków", "away": "Motor Lublin", "score": "18:00", "status": "Sobota, 28.11" },
-  { "home": "Legia Warszawa", "away": "Wieczysta Kraków", "score": "18:00", "status": "Sobota, 28.11" },
-  { "home": "Raków Częstochowa", "away": "Piast Gliwice", "score": "18:00", "status": "Sobota, 28.11" },
-  { "home": "Śląsk Wrocław", "away": "GKS Katowice", "score": "18:00", "status": "Sobota, 28.11" },
-  { "home": "Widzew Łódź", "away": "Zagłębie Lubin", "score": "18:00", "status": "Sobota, 28.11" },
-  { "home": "Jagiellonia Białystok", "away": "Radomiak Radom", "score": "18:00", "status": "Sobota, 28.11" },
-  { "home": "Górnik Zabrze", "away": "Wisła Płock", "score": "18:00", "status": "Sobota, 28.11" },
-  { "home": "Lech Poznań", "away": "Pogoń Szczecin", "score": "18:00", "status": "Sobota, 28.11" }
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Sobota, 28 listopada 2026" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Sobota, 28 listopada 2026" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Sobota, 28 listopada 2026" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Sobota, 28 listopada 2026" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Sobota, 28 listopada 2026" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Sobota, 28 listopada 2026" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Sobota, 28 listopada 2026" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Sobota, 28 listopada 2026" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Sobota, 28 listopada 2026" }
 ],
+
 17: [
-  { "home": "Motor Lublin", "away": "Lech Poznań", "score": "18:00", "status": "Sobota, 5.12" },
-  { "home": "Wieczysta Kraków", "away": "Korona Kielce", "score": "18:00", "status": "Sobota, 5.12" },
-  { "home": "Cracovia", "away": "Widzew Łódź", "score": "18:00", "status": "Sobota, 5.12" },
-  { "home": "Radomiak Radom", "away": "Raków Częstochowa", "score": "18:00", "status": "Sobota, 5.12" },
-  { "home": "Pogoń Szczecin", "away": "Górnik Zabrze", "score": "18:00", "status": "Sobota, 5.12" },
-  { "home": "GKS Katowice", "away": "Legia Warszawa", "score": "18:00", "status": "Sobota, 5.12" },
-  { "home": "Piast Gliwice", "away": "Jagiellonia Białystok", "score": "18:00", "status": "Sobota, 5.12" },
-  { "home": "Zagłębie Lubin", "away": "Wisła Kraków", "score": "18:00", "status": "Sobota, 5.12" },
-  { "home": "Wisła Płock", "away": "Śląsk Wrocław", "score": "18:00", "status": "Sobota, 5.12" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Sobota, 5 grudnia 2026" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Sobota, 5 grudnia 2026" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Sobota, 5 grudnia 2026" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Sobota, 5 grudnia 2026" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Sobota, 5 grudnia 2026" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Sobota, 5 grudnia 2026" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Sobota, 5 grudnia 2026" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Sobota, 5 grudnia 2026" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Sobota, 5 grudnia 2026" }
 ],
+
 18: [
-  { "home": "Motor Lublin", "away": "Widzew Łódź", "score": "18:00", "status": "Sobota, 12.12" },
-  { "home": "Korona Kielce", "away": "Jagiellonia Białystok", "score": "18:00", "status": "Sobota, 12.12" },
-  { "home": "Wieczysta Kraków", "away": "Radomiak Radom", "score": "18:00", "status": "Sobota, 12.12" },
-  { "home": "Cracovia", "away": "Lech Poznań", "score": "18:00", "status": "Sobota, 12.12" },
-  { "home": "Legia Warszawa", "away": "Pogoń Szczecin", "score": "18:00", "status": "Sobota, 12.12" },
-  { "home": "GKS Katowice", "away": "Wisła Kraków", "score": "18:00", "status": "Sobota, 12.12" },
-  { "home": "Śląsk Wrocław", "away": "Górnik Zabrze", "score": "18:00", "status": "Sobota, 12.12" },
-  { "home": "Piast Gliwice", "away": "Zagłębie Lubin", "score": "18:00", "status": "Sobota, 12.12" },
-  { "home": "Wisła Płock", "away": "Raków Częstochowa", "score": "18:00", "status": "Sobota, 12.12" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Sobota, 12 grudnia 2026" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Sobota, 12 grudnia 2026" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Sobota, 12 grudnia 2026" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Sobota, 12 grudnia 2026" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Sobota, 12 grudnia 2026" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Sobota, 12 grudnia 2026" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Sobota, 12 grudnia 2026" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Sobota, 12 grudnia 2026" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Sobota, 12 grudnia 2026" }
 ],
 19: [
-  { "home": "Wisła Kraków", "away": "Piast Gliwice", "score": "18:30", "status": "Sobota, 30.01" },
-  { "home": "Radomiak Radom", "away": "GKS Katowice", "score": "18:00", "status": "Sobota, 30.01" },
-  { "home": "Pogoń Szczecin", "away": "Cracovia", "score": "18:00", "status": "Sobota, 30.01" },
-  { "home": "Raków Częstochowa", "away": "Śląsk Wrocław", "score": "18:00", "status": "Sobota, 30.01" },
-  { "home": "Widzew Łódź", "away": "Wisła Płock", "score": "18:00", "status": "Sobota, 30.01" },
-  { "home": "Jagiellonia Białystok", "away": "Motor Lublin", "score": "18:00", "status": "Sobota, 30.01" },
-  { "home": "Górnik Zabrze", "away": "Korona Kielce", "score": "18:00", "status": "Sobota, 30.01" },
-  { "home": "Zagłębie Lubin", "away": "Legia Warszawa", "score": "18:00", "status": "Sobota, 30.01" },
-  { "home": "Lech Poznań", "away": "Wieczysta Kraków", "score": "18:00", "status": "Sobota, 30.01" }
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "18:00", status: "Sobota, 30 stycznia 2027" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "18:00", status: "Sobota, 30 stycznia 2027" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "18:00", status: "Sobota, 30 stycznia 2027" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "18:00", status: "Sobota, 30 stycznia 2027" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "18:00", status: "Sobota, 30 stycznia 2027" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "18:00", status: "Sobota, 30 stycznia 2027" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "18:00", status: "Sobota, 30 stycznia 2027" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "18:00", status: "Sobota, 30 stycznia 2027" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "18:00", status: "Sobota, 30 stycznia 2027" }
 ],
+
 20: [
-  { "home": "Motor Lublin", "away": "Pogoń Szczecin", "score": "18:00", "status": "Sobota, 6.02" },
-  { "home": "Wieczysta Kraków", "away": "GKS Katowice", "score": "18:00", "status": "Sobota, 6.02" },
-  { "home": "Cracovia", "away": "Śląsk Wrocław", "score": "18:00", "status": "Sobota, 6.02" },
-  { "home": "Legia Warszawa", "away": "Korona Kielce", "score": "18:00", "status": "Sobota, 6.02" },
-  { "home": "Widzew Łódź", "away": "Jagiellonia Białystok", "score": "18:00", "status": "Sobota, 6.02" },
-  { "home": "Piast Gliwice", "away": "Lech Poznań", "score": "18:00", "status": "Sobota, 6.02" },
-  { "home": "Górnik Zabrze", "away": "Radomiak Radom", "score": "18:00", "status": "Sobota, 6.02" },
-  { "home": "Zagłębie Lubin", "away": "Raków Częstochowa", "score": "18:00", "status": "Sobota, 6.02" },
-  { "home": "Wisła Płock", "away": "Wisła Kraków", "score": "18:00", "status": "Sobota, 6.02" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "18:00", status: "Sobota, 6 lutego 2027" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "18:00", status: "Sobota, 6 lutego 2027" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "18:00", status: "Sobota, 6 lutego 2027" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "18:00", status: "Sobota, 6 lutego 2027" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "18:00", status: "Sobota, 6 lutego 2027" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "18:00", status: "Sobota, 6 lutego 2027" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "18:00", status: "Sobota, 6 lutego 2027" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "18:00", status: "Sobota, 6 lutego 2027" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "18:00", status: "Sobota, 6 lutego 2027" }
 ],
+
 21: [
-  { "home": "Korona Kielce", "away": "Widzew Łódź", "score": "18:00", "status": "Sobota, 13.02" },
-  { "home": "Wieczysta Kraków", "away": "Piast Gliwice", "score": "18:00", "status": "Sobota, 13.02" },
-  { "home": "Wisła Kraków", "away": "Górnik Zabrze", "score": "18:00", "status": "Sobota, 13.02" },
-  { "home": "Radomiak Radom", "away": "Legia Warszawa", "score": "18:00", "status": "Sobota, 13.02" },
-  { "home": "Pogoń Szczecin", "away": "Jagiellonia Białystok", "score": "18:00", "status": "Sobota, 13.02" },
-  { "home": "Raków Częstochowa", "away": "Cracovia", "score": "18:00", "status": "Sobota, 13.02" },
-  { "home": "GKS Katowice", "away": "Motor Lublin", "score": "18:00", "status": "Sobota, 13.02" },
-  { "home": "Śląsk Wrocław", "away": "Zagłębie Lubin", "score": "18:00", "status": "Sobota, 13.02" },
-  { "home": "Lech Poznań", "away": "Wisła Płock", "score": "18:00", "status": "Sobota, 13.02" }
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "18:00", status: "Sobota, 13 lutego 2027" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "18:00", status: "Sobota, 13 lutego 2027" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "18:00", status: "Sobota, 13 lutego 2027" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "18:00", status: "Sobota, 13 lutego 2027" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "18:00", status: "Sobota, 13 lutego 2027" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "18:00", status: "Sobota, 13 lutego 2027" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "18:00", status: "Sobota, 13 lutego 2027" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "18:00", status: "Sobota, 13 lutego 2027" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "18:00", status: "Sobota, 13 lutego 2027" }
 ],
+
 22: [
-  { "home": "Motor Lublin", "away": "Korona Kielce", "score": "18:00", "status": "Sobota, 20.02" },
-  { "home": "Wieczysta Kraków", "away": "Cracovia", "score": "18:00", "status": "Sobota, 20.02" },
-  { "home": "Wisła Kraków", "away": "Pogoń Szczecin", "score": "18:00", "status": "Sobota, 20.02" },
-  { "home": "Legia Warszawa", "away": "Piast Gliwice", "score": "18:00", "status": "Sobota, 20.02" },
-  { "home": "Widzew Łódź", "away": "Śląsk Wrocław", "score": "18:00", "status": "Sobota, 20.02" },
-  { "home": "Jagiellonia Białystok", "away": "Lech Poznań", "score": "18:00", "status": "Sobota, 20.02" },
-  { "home": "Górnik Zabrze", "away": "Raków Częstochowa", "score": "18:00", "status": "Sobota, 20.02" },
-  { "home": "Zagłębie Lubin", "away": "Radomiak Radom", "score": "18:00", "status": "Sobota, 20.02" },
-  { "home": "Wisła Płock", "away": "GKS Katowice", "score": "18:00", "status": "Sobota, 20.02" }
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "18:00", status: "Sobota, 20 lutego 2027" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "18:00", status: "Sobota, 20 lutego 2027" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "18:00", status: "Sobota, 20 lutego 2027" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "18:00", status: "Sobota, 20 lutego 2027" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "18:00", status: "Sobota, 20 lutego 2027" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "18:00", status: "Sobota, 20 lutego 2027" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "18:00", status: "Sobota, 20 lutego 2027" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "18:00", status: "Sobota, 20 lutego 2027" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "18:00", status: "Sobota, 20 lutego 2027" }
 ],
+
 23: [
-  { "home": "Korona Kielce", "away": "Wisła Płock", "score": "18:00", "status": "Sobota, 27.02" },
-  { "home": "Wieczysta Kraków", "away": "Wisła Kraków", "score": "18:00", "status": "Sobota, 27.02" },
-  { "home": "Cracovia", "away": "Radomiak Radom", "score": "18:00", "status": "Sobota, 27.02" },
-  { "home": "Pogoń Szczecin", "away": "Zagłębie Lubin", "score": "18:00", "status": "Sobota, 27.02" },
-  { "home": "GKS Katowice", "away": "Górnik Zabrze", "score": "18:00", "status": "Sobota, 27.02" },
-  { "home": "Śląsk Wrocław", "away": "Legia Warszawa", "score": "18:00", "status": "Sobota, 27.02" },
-  { "home": "Piast Gliwice", "away": "Motor Lublin", "score": "18:00", "status": "Sobota, 27.02" },
-  { "home": "Jagiellonia Białystok", "away": "Raków Częstochowa", "score": "18:00", "status": "Sobota, 27.02" },
-  { "home": "Lech Poznań", "away": "Widzew Łódź", "score": "18:00", "status": "Sobota, 27.02" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "18:00", status: "Sobota, 27 lutego 2027" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "18:00", status: "Sobota, 27 lutego 2027" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "18:00", status: "Sobota, 27 lutego 2027" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "18:00", status: "Sobota, 27 lutego 2027" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "18:00", status: "Sobota, 27 lutego 2027" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "18:00", status: "Sobota, 27 lutego 2027" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "18:00", status: "Sobota, 27 lutego 2027" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "18:00", status: "Sobota, 27 lutego 2027" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "18:00", status: "Sobota, 27 lutego 2027" }
 ],
+
 24: [
-  { "home": "Wisła Kraków", "away": "Korona Kielce", "score": "18:00", "status": "Sobota, 6.03" },
-  { "home": "Radomiak Radom", "away": "Widzew Łódź", "score": "18:00", "status": "Sobota, 6.03" },
-  { "home": "Legia Warszawa", "away": "Motor Lublin", "score": "18:00", "status": "Sobota, 6.03" },
-  { "home": "Raków Częstochowa", "away": "Lech Poznań", "score": "18:00", "status": "Sobota, 6.03" },
-  { "home": "GKS Katowice", "away": "Piast Gliwice", "score": "18:00", "status": "Sobota, 6.03" },
-  { "home": "Śląsk Wrocław", "away": "Jagiellonia Białystok", "score": "18:00", "status": "Sobota, 6.03" },
-  { "home": "Górnik Zabrze", "away": "Cracovia", "score": "18:00", "status": "Sobota, 6.03" },
-  { "home": "Zagłębie Lubin", "away": "Wieczysta Kraków", "score": "18:00", "status": "Sobota, 6.03" },
-  { "home": "Wisła Płock", "away": "Pogoń Szczecin", "score": "18:00", "status": "Sobota, 6.03" }
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "18:00", status: "Sobota, 6 marca 2027" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "18:00", status: "Sobota, 6 marca 2027" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "18:00", status: "Sobota, 6 marca 2027" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "18:00", status: "Sobota, 6 marca 2027" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "18:00", status: "Sobota, 6 marca 2027" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "18:00", status: "Sobota, 6 marca 2027" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "18:00", status: "Sobota, 6 marca 2027" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "18:00", status: "Sobota, 6 marca 2027" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "18:00", status: "Sobota, 6 marca 2027" }
 ],
+
 25: [
-  { "home": "Motor Lublin", "away": "Raków Częstochowa", "score": "18:00", "status": "Sobota, 13.03" },
-  { "home": "Korona Kielce", "away": "Śląsk Wrocław", "score": "18:00", "status": "Sobota, 13.03" },
-  { "home": "Wieczysta Kraków", "away": "Pogoń Szczecin", "score": "18:00", "status": "Sobota, 13.03" },
-  { "home": "Cracovia", "away": "Wisła Płock", "score": "18:00", "status": "Sobota, 13.03" },
-  { "home": "GKS Katowice", "away": "Zagłębie Lubin", "score": "18:00", "status": "Sobota, 13.03" },
-  { "home": "Widzew Łódź", "away": "Legia Warszawa", "score": "18:00", "status": "Sobota, 13.03" },
-  { "home": "Piast Gliwice", "away": "Radomiak Radom", "score": "18:00", "status": "Sobota, 13.03" },
-  { "home": "Jagiellonia Białystok", "away": "Wisła Kraków", "score": "18:00", "status": "Sobota, 13.03" },
-  { "home": "Lech Poznań", "away": "Górnik Zabrze", "score": "18:00", "status": "Sobota, 13.03" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "18:00", status: "Sobota, 13 marca 2027" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "18:00", status: "Sobota, 13 marca 2027" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "18:00", status: "Sobota, 13 marca 2027" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "18:00", status: "Sobota, 13 marca 2027" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "18:00", status: "Sobota, 13 marca 2027" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "18:00", status: "Sobota, 13 marca 2027" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "18:00", status: "Sobota, 13 marca 2027" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "18:00", status: "Sobota, 13 marca 2027" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "18:00", status: "Sobota, 13 marca 2027" }
 ],
+
 26: [
-  { "home": "Wieczysta Kraków", "away": "Widzew Łódź", "score": "18:00", "status": "Sobota, 20.03" },
-  { "home": "Cracovia", "away": "GKS Katowice", "score": "18:00", "status": "Sobota, 20.03" },
-  { "home": "Radomiak Radom", "away": "Lech Poznań", "score": "18:00", "status": "Sobota, 20.03" },
-  { "home": "Legia Warszawa", "away": "Jagiellonia Białystok", "score": "18:00", "status": "Sobota, 20.03" },
-  { "home": "Pogoń Szczecin", "away": "Piast Gliwice", "score": "18:00", "status": "Sobota, 20.03" },
-  { "home": "Raków Częstochowa", "away": "Korona Kielce", "score": "18:00", "status": "Sobota, 20.03" },
-  { "home": "Śląsk Wrocław", "away": "Wisła Kraków", "score": "18:00", "status": "Sobota, 20.03" },
-  { "home": "Górnik Zabrze", "away": "Motor Lublin", "score": "18:00", "status": "Sobota, 20.03" },
-  { "home": "Wisła Płock", "away": "Zagłębie Lubin", "score": "18:00", "status": "Sobota, 20.03" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "18:00", status: "Sobota, 20 marca 2027" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "18:00", status: "Sobota, 20 marca 2027" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "18:00", status: "Sobota, 20 marca 2027" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "18:00", status: "Sobota, 20 marca 2027" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "18:00", status: "Sobota, 20 marca 2027" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "18:00", status: "Sobota, 20 marca 2027" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "18:00", status: "Sobota, 20 marca 2027" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "18:00", status: "Sobota, 20 marca 2027" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "18:00", status: "Sobota, 20 marca 2027" }
 ],
+
 27: [
-  { "home": "Motor Lublin", "away": "Radomiak Radom", "score": "18:00", "status": "Sobota, 3.04" },
-  { "home": "Korona Kielce", "away": "Pogoń Szczecin", "score": "18:00", "status": "Sobota, 3.04" },
-  { "home": "Wisła Kraków", "away": "Legia Warszawa", "score": "18:00", "status": "Sobota, 3.04" },
-  { "home": "GKS Katowice", "away": "Raków Częstochowa", "score": "18:00", "status": "Sobota, 3.04" },
-  { "home": "Widzew Łódź", "away": "Piast Gliwice", "score": "18:00", "status": "Sobota, 3.04" },
-  { "home": "Górnik Zabrze", "away": "Jagiellonia Białystok", "score": "18:00", "status": "Sobota, 3.04" },
-  { "home": "Zagłębie Lubin", "away": "Cracovia", "score": "18:00", "status": "Sobota, 3.04" },
-  { "home": "Wisła Płock", "away": "Wieczysta Kraków", "score": "18:00", "status": "Sobota, 3.04" },
-  { "home": "Lech Poznań", "away": "Śląsk Wrocław", "score": "18:00", "status": "Sobota, 3.04" }
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "18:00", status: "Sobota, 3 kwietnia 2027" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "18:00", status: "Sobota, 3 kwietnia 2027" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "18:00", status: "Sobota, 3 kwietnia 2027" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "18:00", status: "Sobota, 3 kwietnia 2027" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "18:00", status: "Sobota, 3 kwietnia 2027" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "18:00", status: "Sobota, 3 kwietnia 2027" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "18:00", status: "Sobota, 3 kwietnia 2027" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "18:00", status: "Sobota, 3 kwietnia 2027" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "18:00", status: "Sobota, 3 kwietnia 2027" }
 ],
+
 28: [
-  { "home": "Korona Kielce", "away": "Lech Poznań", "score": "18:00", "status": "Sobota, 10.04" },
-  { "home": "Wisła Kraków", "away": "Widzew Łódź", "score": "18:00", "status": "Sobota, 10.04" },
-  { "home": "Radomiak Radom", "away": "Wisła Płock", "score": "18:00", "status": "Sobota, 10.04" },
-  { "home": "Legia Warszawa", "away": "Cracovia", "score": "18:00", "status": "Sobota, 10.04" },
-  { "home": "Pogoń Szczecin", "away": "GKS Katowice", "score": "18:00", "status": "Sobota, 10.04" },
-  { "home": "Raków Częstochowa", "away": "Wieczysta Kraków", "score": "18:00", "status": "Sobota, 10.04" },
-  { "home": "Śląsk Wrocław", "away": "Motor Lublin", "score": "18:00", "status": "Sobota, 10.04" },
-  { "home": "Piast Gliwice", "away": "Górnik Zabrze", "score": "18:00", "status": "Sobota, 10.04" },
-  { "home": "Jagiellonia Białystok", "away": "Zagłębie Lubin", "score": "18:00", "status": "Sobota, 10.04" }
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "18:00", status: "Sobota, 10 kwietnia 2027" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "18:00", status: "Sobota, 10 kwietnia 2027" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "18:00", status: "Sobota, 10 kwietnia 2027" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "18:00", status: "Sobota, 10 kwietnia 2027" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "18:00", status: "Sobota, 10 kwietnia 2027" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "18:00", status: "Sobota, 10 kwietnia 2027" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "18:00", status: "Sobota, 10 kwietnia 2027" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "18:00", status: "Sobota, 10 kwietnia 2027" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "18:00", status: "Sobota, 10 kwietnia 2027" }
 ],
+
 29: [
-  { "home": "Wieczysta Kraków", "away": "Śląsk Wrocław", "score": "18:00", "status": "Sobota, 17.04" },
-  { "home": "Cracovia", "away": "Piast Gliwice", "score": "18:00", "status": "Sobota, 17.04" },
-  { "home": "Radomiak Radom", "away": "Pogoń Szczecin", "score": "18:00", "status": "Sobota, 17.04" },
-  { "home": "Raków Częstochowa", "away": "Wisła Kraków", "score": "18:00", "status": "Sobota, 17.04" },
-  { "home": "GKS Katowice", "away": "Korona Kielce", "score": "18:00", "status": "Sobota, 17.04" },
-  { "home": "Górnik Zabrze", "away": "Widzew Łódź", "score": "18:00", "status": "Sobota, 17.04" },
-  { "home": "Zagłębie Lubin", "away": "Motor Lublin", "score": "18:00", "status": "Sobota, 17.04" },
-  { "home": "Wisła Płock", "away": "Jagiellonia Białystok", "score": "18:00", "status": "Sobota, 17.04" },
-  { "home": "Lech Poznań", "away": "Legia Warszawa", "score": "18:00", "status": "Sobota, 17.04" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "18:00", status: "Sobota, 17 kwietnia 2027" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "18:00", status: "Sobota, 17 kwietnia 2027" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "18:00", status: "Sobota, 17 kwietnia 2027" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "18:00", status: "Sobota, 17 kwietnia 2027" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "18:00", status: "Sobota, 17 kwietnia 2027" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "18:00", status: "Sobota, 17 kwietnia 2027" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "18:00", status: "Sobota, 17 kwietnia 2027" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "18:00", status: "Sobota, 17 kwietnia 2027" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "18:00", status: "Sobota, 17 kwietnia 2027" }
 ],
+
 30: [
-  { "home": "Motor Lublin", "away": "Cracovia", "score": "18:00", "status": "Piątek, 23.04" },
-  { "home": "Korona Kielce", "away": "Zagłębie Lubin", "score": "18:00", "status": "Piątek, 23.04" },
-  { "home": "Wisła Kraków", "away": "Lech Poznań", "score": "18:00", "status": "Piątek, 23.04" },
-  { "home": "Legia Warszawa", "away": "Górnik Zabrze", "score": "18:00", "status": "Piątek, 23.04" },
-  { "home": "Pogoń Szczecin", "away": "Raków Częstochowa", "score": "18:00", "status": "Piątek, 23.04" },
-  { "home": "Śląsk Wrocław", "away": "Radomiak Radom", "score": "18:00", "status": "Piątek, 23.04" },
-  { "home": "Widzew Łódź", "away": "GKS Katowice", "score": "18:00", "status": "Piątek, 23.04" },
-  { "home": "Piast Gliwice", "away": "Wisła Płock", "score": "18:00", "status": "Piątek, 23.04" },
-  { "home": "Jagiellonia Białystok", "away": "Wieczysta Kraków", "score": "18:00", "status": "Piątek, 23.04" }
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "18:00", status: "Piątek, 23 kwietnia 2027" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "18:00", status: "Piątek, 23 kwietnia 2027" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "18:00", status: "Piątek, 23 kwietnia 2027" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "18:00", status: "Piątek, 23 kwietnia 2027" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "18:00", status: "Piątek, 23 kwietnia 2027" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "18:00", status: "Piątek, 23 kwietnia 2027" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "18:00", status: "Piątek, 23 kwietnia 2027" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "18:00", status: "Piątek, 23 kwietnia 2027" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "18:00", status: "Piątek, 23 kwietnia 2027" }
 ],
+
 31: [
-  { "home": "Wieczysta Kraków", "away": "Górnik Zabrze", "score": "18:00", "status": "Sobota, 1.05" },
-  { "home": "Cracovia", "away": "Wisła Kraków", "score": "18:00", "status": "Sobota, 1.05" },
-  { "home": "Radomiak Radom", "away": "Korona Kielce", "score": "18:00", "status": "Sobota, 1.05" },
-  { "home": "Pogoń Szczecin", "away": "Widzew Łódź", "score": "18:00", "status": "Sobota, 1.05" },
-  { "home": "Raków Częstochowa", "away": "Legia Warszawa", "score": "18:00", "status": "Sobota, 1.05" },
-  { "home": "GKS Katowice", "away": "Jagiellonia Białystok", "score": "18:00", "status": "Sobota, 1.05" },
-  { "home": "Piast Gliwice", "away": "Śląsk Wrocław", "score": "18:00", "status": "Sobota, 1.05" },
-  { "home": "Zagłębie Lubin", "away": "Lech Poznań", "score": "18:00", "status": "Sobota, 1.05" },
-  { "home": "Wisła Płock", "away": "Motor Lublin", "score": "18:00", "status": "Sobota, 1.05" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "18:00", status: "Sobota, 1 maja 2027" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "18:00", status: "Sobota, 1 maja 2027" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "18:00", status: "Sobota, 1 maja 2027" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "18:00", status: "Sobota, 1 maja 2027" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "18:00", status: "Sobota, 1 maja 2027" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "18:00", status: "Sobota, 1 maja 2027" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "18:00", status: "Sobota, 1 maja 2027" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "18:00", status: "Sobota, 1 maja 2027" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "18:00", status: "Sobota, 1 maja 2027" }
 ],
+
 32: [
-  { "home": "Motor Lublin", "away": "Wieczysta Kraków", "score": "18:00", "status": "Sobota, 8.05" },
-  { "home": "Korona Kielce", "away": "Piast Gliwice", "score": "18:00", "status": "Sobota, 8.05" },
-  { "home": "Wisła Kraków", "away": "Radomiak Radom", "score": "18:00", "status": "Sobota, 8.05" },
-  { "home": "Legia Warszawa", "away": "Wisła Płock", "score": "18:00", "status": "Sobota, 8.05" },
-  { "home": "Śląsk Wrocław", "away": "Pogoń Szczecin", "score": "18:00", "status": "Sobota, 8.05" },
-  { "home": "Widzew Łódź", "away": "Raków Częstochowa", "score": "18:00", "status": "Sobota, 8.05" },
-  { "home": "Jagiellonia Białystok", "away": "Cracovia", "score": "18:00", "status": "Sobota, 8.05" },
-  { "home": "Górnik Zabrze", "away": "Zagłębie Lubin", "score": "18:00", "status": "Sobota, 8.05" },
-  { "home": "Lech Poznań", "away": "GKS Katowice", "score": "18:00", "status": "Sobota, 8.05" }
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "18:00", status: "Sobota, 8 maja 2027" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "18:00", status: "Sobota, 8 maja 2027" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "18:00", status: "Sobota, 8 maja 2027" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "18:00", status: "Sobota, 8 maja 2027" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "18:00", status: "Sobota, 8 maja 2027" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "18:00", status: "Sobota, 8 maja 2027" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "18:00", status: "Sobota, 8 maja 2027" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "18:00", status: "Sobota, 8 maja 2027" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "18:00", status: "Sobota, 8 maja 2027" }
 ],
+
 33: [
-  { "home": "Motor Lublin", "away": "Wisła Kraków", "score": "18:00", "status": "Sobota, 15.05" },
-  { "home": "Wieczysta Kraków", "away": "Legia Warszawa", "score": "18:00", "status": "Sobota, 15.05" },
-  { "home": "Cracovia", "away": "Korona Kielce", "score": "18:00", "status": "Sobota, 15.05" },
-  { "home": "Radomiak Radom", "away": "Jagiellonia Białystok", "score": "18:00", "status": "Sobota, 15.05" },
-  { "home": "Pogoń Szczecin", "away": "Lech Poznań", "score": "18:00", "status": "Sobota, 15.05" },
-  { "home": "GKS Katowice", "away": "Śląsk Wrocław", "score": "18:00", "status": "Sobota, 15.05" },
-  { "home": "Piast Gliwice", "away": "Raków Częstochowa", "score": "18:00", "status": "Sobota, 15.05" },
-  { "home": "Zagłębie Lubin", "away": "Widzew Łódź", "score": "18:00", "status": "Sobota, 15.05" },
-  { "home": "Wisła Płock", "away": "Górnik Zabrze", "score": "18:00", "status": "Sobota, 15.05" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "18:00", status: "Sobota, 15 maja 2027" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "18:00", status: "Sobota, 15 maja 2027" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "18:00", status: "Sobota, 15 maja 2027" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "18:00", status: "Sobota, 15 maja 2027" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "18:00", status: "Sobota, 15 maja 2027" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "18:00", status: "Sobota, 15 maja 2027" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "18:00", status: "Sobota, 15 maja 2027" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "18:00", status: "Sobota, 15 maja 2027" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "18:00", status: "Sobota, 15 maja 2027" }
 ],
+
 34: [
-  { "home": "Korona Kielce", "away": "Wieczysta Kraków", "score": "18:00", "status": "Sobota, 22.05" },
-  { "home": "Wisła Kraków", "away": "Zagłębie Lubin", "score": "18:00", "status": "Sobota, 22.05" },
-  { "home": "Legia Warszawa", "away": "GKS Katowice", "score": "18:00", "status": "Sobota, 22.05" },
-  { "home": "Raków Częstochowa", "away": "Radomiak Radom", "score": "18:00", "status": "Sobota, 22.05" },
-  { "home": "Śląsk Wrocław", "away": "Wisła Płock", "score": "18:00", "status": "Sobota, 22.05" },
-  { "home": "Widzew Łódź", "away": "Cracovia", "score": "18:00", "status": "Sobota, 22.05" },
-  { "home": "Jagiellonia Białystok", "away": "Piast Gliwice", "score": "18:00", "status": "Sobota, 22.05" },
-  { "home": "Górnik Zabrze", "away": "Pogoń Szczecin", "score": "18:00", "status": "Sobota, 22.05" },
-  { "home": "Lech Poznań", "away": "Motor Lublin", "score": "18:00", "status": "Sobota, 22.05" }
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "18:00", status: "Sobota, 22 maja 2027" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "18:00", status: "Sobota, 22 maja 2027" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "18:00", status: "Sobota, 22 maja 2027" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "18:00", status: "Sobota, 22 maja 2027" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "18:00", status: "Sobota, 22 maja 2027" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "18:00", status: "Sobota, 22 maja 2027" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "18:00", status: "Sobota, 22 maja 2027" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "18:00", status: "Sobota, 22 maja 2027" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "18:00", status: "Sobota, 22 maja 2027" }
 ]
 };
 
-        // 2. REGULACJA SEZONU
-        const LICZBA_KOLEJEK = 34; 
-        const AKTUALNA_KOLEJKA = 13;
+function zmienKolejkeEkstraklasa() {
+    const select = document.getElementById("kolejkaSelect");
+    const wybranyNumer = select.value;
+    const kontener = document.getElementById("kontenerMeczowEkstraklasa");
+    
+    kontener.innerHTML = "";
+    const mecze = meczeEkstraklasy[wybranyNumer];
+    if (!mecze) return;
 
-        // Generator opcji wyboru w menu (wywoływany raz przy starcie)
-        function inicjalizujTerminarz() {
-            const select = document.getElementById("kolejkaSelect");
+    // Automatyczne grupowanie meczów po polu "status"
+    const pogrupowaneMecze = {};
+    mecze.forEach(mecz => {
+        if (!pogrupowaneMecze[mecz.status]) {
+            pogrupowaneMecze[mecz.status] = [];
+        }
+        pogrupowaneMecze[mecz.status].push(mecz);
+    });
+
+    // Renderowanie wygenerowanych grup
+    Object.keys(pogrupowaneMecze).forEach(nazwaStatusu => {
+        // Pasek nagłówka grupy
+        const pasekDnia = document.createElement("div");
+        pasekDnia.style.cssText = "background-color: #003366; color: #ffffff; padding: 10px 15px; font-weight: bold; font-size: 15px; margin-top: 12px; border-radius: 4px 4px 0 0;";
+        pasekDnia.innerText = nazwaStatusu;
+        kontener.appendChild(pasekDnia);
+
+        // Kontener na mecze z danej grupy
+        const listaMeczow = document.createElement("div");
+        listaMeczow.style.cssText = "border: 1px solid #cbd5e1; border-top: none; background: #ffffff; border-radius: 0 0 4px 4px; margin-bottom: 5px;";
+
+        pogrupowaneMecze[nazwaStatusu].forEach(mecz => {
+            const row = document.createElement("div");
+            row.style.cssText = "display: flex; align-items: center; padding: 14px 10px; border-bottom: 1px solid #f1f5f9;";
             
-            for (let i = 1; i <= LICZBA_KOLEJEK; i++) {
-                const opt = document.createElement("option");
-                opt.value = i;
-                opt.innerText = `${i}. Kolejka` + (i === AKTUALNA_KOLEJKA ? " (Aktualna)" : "");
-                if (i === AKTUALNA_KOLEJKA) opt.selected = true;
-                select.appendChild(opt);
-            }
-            renderujKolejke();
-        }
+            // Funkcja sprawdzająca czy wpisano wynik (zawiera dwukropek ze spacjami lub bez), czy samą godzinę
+            const czyWynik = mecz.score.includes(":") && !mecz.score.match(/^[0-2][0-9]:[0-5][0-9]$/);
+            
+            const scoreStyle = czyWynik 
+                ? "width: 55px; background: #002d72; color: #ffffff; text-align: center; font-weight: bold; padding: 5px 0; border-radius: 4px; font-size: 14px;"
+                : "width: 55px; background: #f1f5f9; color: #64748b; text-align: center; font-weight: 500; padding: 5px 0; border-radius: 4px; font-size: 13px; border: 1px solid #e2e8f0;";
 
-        // 3. GŁÓWNY ALGORYTM WYŚWIETLANIA Z HERBAMI
-        function renderujKolejke() {
-            const numerKolejki = document.getElementById("kolejkaSelect").value;
-            const kontener = document.getElementById("terminarzKontener");
-            kontener.innerHTML = ""; 
-
-            const mecze = bazaMeczow[numerKolejki];
-
-            if (!mecze || mecze.length === 0) {
-                kontener.innerHTML = `<div style="text-align:center; padding: 30px; color: #888; font-weight: 500;">Brak szczegółowych danych dla tej kolejki w bazie algorytmu.</div>`;
-                return;
-            }
-
-            let aktualnyStatus = "";
-
-            mecze.forEach(mecz => {
-                // Tworzenie nagłówków dni/statusu
-                if (mecz.status !== aktualnyStatus) {
-                    aktualnyStatus = mecz.status;
-                    const pasek = document.createElement("div");
-                    pasek.className = "sekcja-podzialu";
-                    pasek.innerText = aktualnyStatus;
-                    kontener.appendChild(pasek);
-                }
-
-                // dynamiczne sprawdzanie formatu wyniku/godziny
-                const czyRozegrany = mecz.score.includes(" : ");
-                const klasaWskaznika = czyRozegrany ? "mecz-score" : "mecz-date";
-
-                // Pobranie nazw plików graficznych z naszej mapy herbów
-                const herbHome = herbyKlubow[mecz.home] || "default.png";
-                const herbAway = herbyKlubow[mecz.away] || "default.png";
-
-                // Renderowanie wiersza z herbami ułożonymi symetrycznie
-                const meczRow = document.createElement("div");
-                meczRow.className = "mecz-row";
-                meczRow.innerHTML = `
-                    <div class="mecz-flex">
-                        <div class="mecz-team home">
-                            <span>${mecz.home}</span>
-                            <img src="herby/${herbHome}" alt="" class="mecz-logo-mini" style="height: 20px; width: auto; margin-left: 4px;">
-                        </div>
-                        <div class="mecz-center">
-                            <span class="${klasaWskaznika}">${mecz.score}</span>
-                        </div>
-                        <div class="mecz-team away">
-                            <img src="herby/${herbAway}" alt="" class="mecz-logo-mini" style="height: 20px; width: auto; margin-right: 4px;">
-                            <span>${mecz.away}</span>
-                        </div>
-                    </div>
-                `;
-                kontener.appendChild(meczRow);
-            });
-        }
-
-        // Aktywacja skryptu po załadowaniu drzewa dokumentu
-        window.onload = inicjalizujTerminarz;
-               // AUTOMATYCZNE OBLICZANIE I SORTOWANIE DRUŻYN NA BAZIE (Zakończone)
-        function automatycznaAktualizacjaTabeli() {
-            const tbody = document.getElementById("tabela-pozycji");
-            if (!tbody) return;
-
-            // Tworzymy mapę obiektów z wierszy HTML, aby zachować oryginalne elementy
-            const wiersze = Array.from(tbody.querySelectorAll("tr"));
-            const daneDruzyn = wiersze.map(tr => {
-                const nazwa = tr.cells[1].textContent.trim();
-                const mecze = parseInt(tr.cells[2].textContent) || 0;
-                const bramki = tr.cells[3].textContent.split(':');
-                const bZd = parseInt(bramki[0]) || 0;
-                const bStr = parseInt(bramki[1]) || 0;
-                const pts = parseInt(tr.cells[4].textContent) || 0;
+            row.innerHTML = `
+                <div style="flex: 1; text-align: right; font-weight: 600; color: #1e293b; padding-right: 8px; font-size: 14px;">${mecz.home}</div>
+                <img src="${mecz.homeLogo}" alt="" style="width: 22px; height: 22px; object-fit: contain; margin-right: 12px;" onerror="this.style.opacity='0'">
                 
-                // Pobieramy aktualne badge formy
-                const formBadges = Array.from(tr.cells[5].querySelectorAll(".form-badge")).map(span => span.textContent.trim());
-
-                return { element: tr, name: nazwa, m: mecze, bZd: bZd, bStr: bStr, pts: pts, form: formBadges };
-            });
-
-            // Przeszukujemy bazę meczów i doliczamy statystyki tylko dla nowych zakończonych spotkań
-            Object.keys(bazaMeczow).forEach(kolejkaNum => {
-                bazaMeczow[kolejkaNum].forEach(mecz => {
-                    if (mecz.status && mecz.status.includes("(Zakończone)") && !mecz.przeliczony) {
-                        const bramkiMeczu = mecz.score.split(':');
-                        const bHome = parseInt(bramkiMeczu[0]) || 0;
-                        const bAway = parseInt(bramkiMeczu[1]) || 0;
-
-                        const gosp = daneDruzyn.find(d => d.name === mecz.home);
-                        const gosc = daneDruzyn.find(d => d.name === mecz.away);
-
-                        if (gosp && gosc) {
-                            gosp.m += 1; gosc.m += 1;
-                            gosp.bZd += bHome; gosp.bStr += bAway;
-                            gosc.bZd += bAway; gosc.bStr += bHome;
-
-                            if (bHome > bAway) {
-                                gosp.pts += 3;
-                                gosp.form.unshift("W"); gosc.form.unshift("P");
-                            } else if (bHome < bAway) {
-                                gosc.pts += 3;
-                                gosp.form.unshift("P"); gosc.form.unshift("W");
-                            } else {
-                                gosp.pts += 1; gosc.pts += 1;
-                                gosp.form.unshift("R"); gosc.form.unshift("R");
-                            }
-                            gosp.form = gosp.form.slice(0, 5);
-                            gosc.form = gosc.form.slice(0, 5);
-                        }
-                        // Oznaczamy mecz jako przeliczony, żeby nie dodawać punktów w nieskończoność
-                        mecz.przeliczony = true; 
-                    }
-                });
-            });
-
-            // Sortowanie: punkty -> bilans bramek -> bramki strzelone
-            daneDruzyn.sort((a, b) => {
-                if (b.pts !== a.pts) return b.pts - a.pts;
-                const bilansA = a.bZd - a.bStr;
-                const bilansB = b.bZd - b.bStr;
-                if (bilansB !== bilansA) return bilansB - bilansA;
-                return b.bZd - a.bZd;
-            });
-
-            // Podmieniamy wartości w HTML i ustawiamy wiersze w nowej kolejności
-            daneDruzyn.forEach((druzyna, index) => {
-                const poz = index + 1;
-                const tr = druzyna.element;
-
-                // Aktualizujemy komórki tekstowe w wierszu
-                tr.cells[0].textContent = poz;
-                tr.cells[2].textContent = druzyna.m;
-                tr.cells[3].textContent = `${druzyna.bZd}:${druzyna.bStr}`;
-                tr.cells[4].textContent = druzyna.pts;
-
-                // Aktualizujemy kafelki formy
-                tr.cells[5].innerHTML = druzyna.form.map(f => {
-                    const klasa = f === "W" ? "form-w" : (f === "R" ? "form-r" : "form-p");
-                    return `<span class="form-badge ${klasa}">${f}</span>`;
-                }).join('');
-
-                // Dynamicznie resetujemy i nadajemy paski boczne
-                tr.className = "";
-                if (poz <= 4) tr.classList.add("zone-blue");
-                if (poz >= 16) tr.classList.add("zone-relegation");
-
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Podpinamy automatyczne wywołanie funkcji przy starcie strony
-        document.addEventListener("DOMContentLoaded", function() {
-            automatycznaAktualizacjaTabeli();
+                <div style="${scoreStyle}">${mecz.score}</div>
+                
+                <img src="${mecz.awayLogo}" alt="" style="width: 22px; height: 22px; object-fit: contain; margin-left: 12px;" onerror="this.style.opacity='0'">
+                <div style="flex: 1; text-align: left; font-weight: 600; color: #1e293b; padding-left: 8px; font-size: 14px;">${mecz.away}</div>
+            `;
+            listaMeczow.appendChild(row);
         });
 
-    </script>
+        kontener.appendChild(listaMeczow);
+    });
+}
 
+// Inicjalizacja przy ładowaniu strony
+document.addEventListener("DOMContentLoaded", zmienKolejkeEkstraklasa);
+</script>
 
-        <div class="liga-section">
+<!-- ========================================================================= -->
+<!-- KONIEC FRAGMENTU                                                          -->
+<!-- ========================================================================= -->
+
             <h2>📊 Tabela Ligowa</h2>
             
             <table class="ekstraklasa-table">
@@ -776,7 +709,6 @@
                         <th style="width: 60px;">Mecze</th>
                         <th style="width: 100px;">Bramki</th>
                         <th style="width: 70px;">Pkt</th>
-                        <th style="width: 140px;">Ostatnie 5 meczów</th>
                     </tr>
                 </thead>
                 <tbody id="tabela-pozycji">
@@ -786,8 +718,7 @@
                         <td class="left-align team-name">
                             <img src="herby/gornik.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Górnik Zabrze
                         </td>
-                        <td>11</td><td>20:10</td><td class="pts-cell">26</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-r">R</span><span class="form-badge form-w">W</span><span class="form-badge form-r">R</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 2 -->
                     <tr class="zone-blue">
@@ -795,8 +726,7 @@
                         <td class="left-align team-name">
                             <img src="herby/lech.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Lech Poznań
                         </td>
-                        <td>10</td><td>27:9</td><td class="pts-cell">25</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 3 -->
                     <tr class="zone-blue">
@@ -804,8 +734,7 @@
                         <td class="left-align team-name">
                             <img src="herby/legia.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Legia Warszawa
                         </td>
-                        <td>11</td><td>22:9</td><td class="pts-cell">23</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-r">R</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-r">R</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 4 -->
                     <tr class="zone-blue">
@@ -813,8 +742,7 @@
                         <td class="left-align team-name">
                             <img src="herby/pogon.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Pogoń Szczecin
                         </td>
-                        <td>10</td><td>15:6</td><td class="pts-cell">21</td>
-                        <td><span class="form-badge form-r">R</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 5 -->
                     <tr>
@@ -822,8 +750,7 @@
                         <td class="left-align team-name">
                             <img src="herby/zaglebie.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Zagłębie Lubin
                         </td>
-                        <td>11</td><td>13:13</td><td class="pts-cell">18</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-r">R</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 6 -->
                     <tr>
@@ -831,8 +758,7 @@
                         <td class="left-align team-name">
                             <img src="herby/gks-katowice.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">GKS Katowice
                         </td>
-                        <td>11</td><td>22:16</td><td class="pts-cell">18</td>
-                        <td><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 7 -->
                     <tr>
@@ -840,8 +766,7 @@
                         <td class="left-align team-name">
                             <img src="herby/wisla-krakow.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Wisła Kraków
                         </td>
-                        <td>11</td><td>17:14</td><td class="pts-cell">18</td>
-                        <td><span class="form-badge form-r">R</span><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-r">R</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 8 -->
                     <tr>
@@ -849,8 +774,7 @@
                         <td class="left-align team-name">
                             <img src="herby/piast.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Piast Gliwice
                         </td>
-                        <td>11</td><td>19:17</td><td class="pts-cell">17</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-r">R</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 9 -->
                     <tr>
@@ -858,8 +782,7 @@
                         <td class="left-align team-name">
                             <img src="herby/korona.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Korona Kielce
                         </td>
-                        <td>11</td><td>13:18</td><td class="pts-cell">15</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 10 -->
                     <tr>
@@ -867,8 +790,7 @@
                         <td class="left-align team-name">
                             <img src="herby/wisla-plock.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Wisła Płock
                         </td>
-                        <td>10</td><td>10:15</td><td class="pts-cell">14</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 11 -->
                     <tr>
@@ -876,8 +798,7 @@
                         <td class="left-align team-name">
                             <img src="herby/motor.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Motor Lublin
                         </td>
-                        <td>11</td><td>15:19</td><td class="pts-cell">12</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 12 -->
                     <tr>
@@ -885,8 +806,7 @@
                         <td class="left-align team-name">
                             <img src="herby/cracovia.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Cracovia
                         </td>
-                        <td>11</td><td>13:16</td><td class="pts-cell">12</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 13 -->
                     <tr>
@@ -894,8 +814,7 @@
                         <td class="left-align team-name">
                             <img src="herby/jagiellonia.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Jagiellonia Białystok
                         </td>
-                        <td>10</td><td>13:17</td><td class="pts-cell">12</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 14 -->
                     <tr>
@@ -903,8 +822,7 @@
                         <td class="left-align team-name">
                             <img src="herby/widzew.png" alt="🔴" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Widzew Łódź
                         </td>
-                        <td>11</td><td>14:15</td><td class="pts-cell">10</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 15 -->
                     <tr>
@@ -912,8 +830,7 @@
                         <td class="left-align team-name">
                             <img src="herby/wieczysta.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Wieczysta Kraków
                         </td>
-                        <td>11</td><td>16:21</td><td class="pts-cell">8</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 16 (Strefa spadkowa) -->
                     <tr class="zone-relegation">
@@ -921,8 +838,7 @@
                         <td class="left-align team-name">
                             <img src="herby/radomiak.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Radomiak Radom
                         </td>
-                        <td>11</td><td>9:24</td><td class="pts-cell">8</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 17 (Strefa spadkowa) -->
                     <tr class="zone-relegation">
@@ -930,8 +846,7 @@
                         <td class="left-align team-name">
                             <img src="herby/slask.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Śląsk Wrocław
                         </td>
-                        <td>11</td><td>14:22</td><td class="pts-cell">6</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
                     <!-- 18 (Strefa spadkowa) -->
                     <tr class="zone-relegation">
@@ -939,6 +854,323 @@
                         <td class="left-align team-name">
                             <img src="herby/rakow.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Raków Częstochowa
                         </td>
-                        <td>11</td><td>15:26</td><td class="pts-cell">6</td>
-                        <td><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-w">W</span><span class="form-badge form-p">P</span><span class="form-badge form-p">P</span></td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
                     </tr>
+
+            </tbody>
+        </table>
+        <div class="legend">
+            <div class="legend-item"><div class="dot dot-blue"></div> Strefa pucharowa</div>
+            <div class="legend-item"><div class="dot dot-red"></div> Strefa spadkowa</div>
+        </div>
+    </div>
+<script>
+// Baza danych dla La Liga
+const meczeLaLiga = {
+    1: [
+        { home: "Deportivo Alavés", homeLogo: "herby/alaves.png", away: "Getafe CF", awayLogo: "herby/getafe.png", score: "3 : 0", status: "Mecze rozegrane" },
+        { home: "Sevilla FC", homeLogo: "herby/sevilla.png", away: "Rayo Vallecano", awayLogo: "herby/rayo.png", score: "2 : 1", status: "Mecze rozegrane" }
+    ],
+    11: [
+        { home: "Villarreal CF", homeLogo: "herby/villarreal.png", away: "RCD Espanyol", awayLogo: "herby/espanyol.png", score: "0 : 1", status: "Piątek, 30 października (Zakończone)" },
+        { home: "Levante UD", homeLogo: "herby/levante.png", away: "Atlético Madryt", awayLogo: "herby/atletico.png", score: "14:00", status: "Sobota, 31 października" },
+        { home: "Rayo Vallecano", homeLogo: "herby/rayo.png", away: "Celta Vigo", awayLogo: "herby/celta.png", score: "16:15", status: "Sobota, 31 października" },
+        { home: "Real Betis", homeLogo: "herby/betis.png", away: "Málaga CF", awayLogo: "herby/malaga.png", score: "18:30", status: "Sobota, 31 października" },
+        { home: "FC Barcelona", homeLogo: "herby/barcelona.png", away: "Deportivo Alavés", awayLogo: "herby/alaves.png", score: "21:00", status: "Sobota, 31 października" },
+        { home: "Getafe CF", homeLogo: "herby/getafe.png", away: "Sevilla FC", awayLogo: "herby/sevilla.png", score: "14:00", status: "Niedziela, 1 listopada" },
+        { home: "Racing Santander", homeLogo: "herby/racing.png", away: "Real Madryt", awayLogo: "herby/real.png", score: "16:15", status: "Niedziela, 1 listopada" }
+    ]
+};
+
+function zmienKolejkeLaLiga() {
+    const select = document.getElementById("kolejkaLaLigaSelect");
+    if (!select) return;
+    const wybranyNumer = select.value;
+    const kontener = document.getElementById("kontenerMeczowLaLiga");
+    
+    kontener.innerHTML = "";
+    const mecze = meczeLaLiga[wybranyNumer];
+    if (!mecze) return;
+
+    const pogrupowane = {};
+    mecze.forEach(mecz => {
+        if (!pogrupowane[mecz.status]) {
+            pogrupowane[mecz.status] = [];
+        }
+        pogrupowane[mecz.status].push(mecz);
+    });
+
+    Object.keys(pogrupowane).forEach(status => {
+        const pasekDnia = document.createElement("div");
+        pasekDnia.style.cssText = "background-color: #7a1c1c; color: #ffffff; padding: 10px 15px; font-weight: bold; font-size: 15px; margin-top: 12px; border-radius: 4px 4px 0 0;";
+        pasekDnia.innerText = status;
+        kontener.appendChild(pasekDnia);
+
+        const listaMeczow = document.createElement("div");
+        listaMeczow.style.cssText = "border: 1px solid #cbd5e1; border-top: none; background: #ffffff; border-radius: 0 0 4px 4px; margin-bottom: 5px;";
+
+        pogrupowane[status].forEach(mecz => {
+            const row = document.createElement("div");
+            row.style.cssText = "display: flex; align-items: center; padding: 14px 10px; border-bottom: 1px solid #f1f5f9;";
+            
+            const czyWynik = mecz.score.includes(":") && !mecz.score.match(/^[0-2][0-9]:[0-5][0-9]$/);
+            
+            const scoreStyle = czyWynik 
+                ? "width: 55px; background: #7a1c1c; color: #ffffff; text-align: center; font-weight: bold; padding: 5px 0; border-radius: 4px; font-size: 14px;"
+                : "width: 55px; background: #f1f5f9; color: #64748b; text-align: center; font-weight: 500; padding: 5px 0; border-radius: 4px; font-size: 13px; border: 1px solid #e2e8f0;";
+
+            row.innerHTML = `
+                <div style="flex: 1; text-align: right; font-weight: 600; color: #1e293b; padding-right: 8px; font-size: 14px;">${mecz.home}</div>
+                <img src="${mecz.homeLogo}" alt="" style="width: 22px; height: 22px; object-fit: contain; margin-right: 12px;" onerror="this.style.opacity='0'">
+                <div style="${scoreStyle}">${mecz.score}</div>
+                <img src="${mecz.awayLogo}" alt="" style="width: 22px; height: 22px; object-fit: contain; margin-left: 12px;" onerror="this.style.opacity='0'">
+                <div style="flex: 1; text-align: left; font-weight: 600; color: #1e293b; padding-left: 8px; font-size: 14px;">${mecz.away}</div>
+            `;
+            listaMeczow.appendChild(row);
+        });
+
+        kontener.appendChild(listaMeczow);
+    });
+}
+
+// Automatyczne uruchamianie obu lig na starcie strony
+document.addEventListener("DOMContentLoaded", () => {
+    if (typeof zmienKolejkeEkstraklasa === "function") zmienKolejkeEkstraklasa();
+    zmienKolejkeLaLiga();
+});
+</script>
+
+
+
+    <!-- IDENTYCZNA TABELA DLA LA LIGA -->
+<div class="liga-section" style="margin-top: 30px;">
+    <h2><span></span></h2>
+
+    <!-- Wybór kolejki -->
+    <div class="header-row" style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 15px; font-family: 'Segoe UI', Helvetica, sans-serif;">
+        <h2 style="margin: 0; font-size: 18px; color: #7a1c1c; font-weight: bold;">Wybierz kolejkę:</h2>
+        
+        <select id="kolejkaLaLigaSelect" onchange="zmienKolejkeLaLiga()" style="padding: 6px 12px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; outline: none; background-color: #fff;">
+            <option value="1">1. Kolejka</option>
+            <option value="2">2. Kolejka</option>
+            <option value="3">3. Kolejka</option>
+            <option value="4">4. Kolejka</option>
+            <option value="5">5. Kolejka</option>
+            <option value="6">6. Kolejka</option>
+            <option value="7">7. Kolejka</option>
+            <option value="8">8. Kolejka</option>
+            <option value="9">9. Kolejka</option>
+            <option value="10">10. Kolejka</option>
+            <option value="11" selected>11. Kolejka (Aktualna)</option>
+            <option value="12">12. Kolejka</option>
+            <option value="13">13. Kolejka</option>
+        </select>
+    </div>
+
+    <!-- Tutaj skrypt JS automatycznie wygeneruje mecze -->
+    <div id="kontenerMeczowLaLiga" style="font-family: 'Segoe UI', Helvetica, sans-serif; margin-bottom: 25px;"></div>
+
+    <!-- Twoja tabela ligowa (zostaje bez zmian) -->
+    <table class="ekstraklasa-table">
+
+
+        <table class="ekstraklasa-table">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">Poz</th>
+                    <th class="left-align">Klub</th>
+                    <th style="width: 80px;">Mecze</th>
+                    <th style="width: 100px;">Bramki</th>
+                    <th style="width: 80px;">Pkt</th>
+                </tr>
+            </thead>
+            <tbody>
+                                    <!-- 1-4 Liga Mistrzów, 5-6 Liga Europy (Niebieskie strefy) -->
+                    <tr class="zone-blue">
+                        <td class="pos-num">1</td>
+                        <td class="left-align team-name"><img src="herby/alaves.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Alaves</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr class="zone-blue">
+                        <td class="pos-num">2</td>
+                        <td class="left-align team-name"><img src="herby/athletic-bilbao.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Athletic Bilbao</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr class="zone-blue">
+                        <td class="pos-num">3</td>
+                        <td class="left-align team-name"><img src="herby/atletico-madryt.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Atletico Madryt</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr class="zone-blue">
+                        <td class="pos-num">4</td>
+                        <td class="left-align team-name"><img src="herby/celta-vigo.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Celta Vigo</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr class="zone-blue">
+                        <td class="pos-num">5</td>
+                        <td class="left-align team-name"><img src="herby/deportivo-a-coruna.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Deportivo A Coruña</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr class="zone-blue">
+                        <td class="pos-num">6</td>
+                        <td class="left-align team-name"><img src="herby/elche-cf.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Elche CF</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    
+                    <!-- Środek tabeli -->
+                    <tr>
+                        <td class="pos-num" style="color: #666;">7</td>
+                        <td class="left-align team-name"><img src="herby/espanyol.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Espanyol</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td class="pos-num" style="color: #666;">8</td>
+                        <td class="left-align team-name"><img src="herby/fc-barcelona.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">FC Barcelona</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td class="pos-num" style="color: #666;">9</td>
+                        <td class="left-align team-name"><img src="herby/getafe-cf.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Getafe CF</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td class="pos-num" style="color: #666;">10</td>
+                        <td class="left-align team-name"><img src="herby/levante-ud.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Levante UD</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td class="pos-num" style="color: #666;">11</td>
+                        <td class="left-align team-name"><img src="herby/malaga-cf.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Málaga CF</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td class="pos-num" style="color: #666;">12</td>
+                        <td class="left-align team-name"><img src="herby/osasuna.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Osasuna</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td class="pos-num" style="color: #666;">13</td>
+                        <td class="left-align team-name"><img src="herby/racing-santander.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Racing Santander</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td class="pos-num" style="color: #666;">14</td>
+                        <td class="left-align team-name"><img src="herby/rayo-vallecano.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Rayo Vallecano</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td class="pos-num" style="color: #666;">15</td>
+                        <td class="left-align team-name"><img src="herby/real-betis.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Real Betis</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td class="pos-num" style="color: #666;">16</td>
+                        <td class="left-align team-name"><img src="herby/real-madryt.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Real Madryt</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr>
+                        <td class="pos-num" style="color: #666;">17</td>
+                        <td class="left-align team-name"><img src="herby/real-sociedad.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Real Sociedad</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+
+                    <!-- 18-20 Strefa spadkowa (Czerwone strefy) -->
+                    <tr class="zone-relegation">
+                        <td class="pos-num">18</td>
+                        <td class="left-align team-name"><img src="herby/sevilla-fc.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Sevilla FC</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr class="zone-relegation">
+                        <td class="pos-num">19</td>
+                        <td class="left-align team-name"><img src="herby/valencia-cf.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Valencia CF</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+                    <tr class="zone-relegation">
+                        <td class="pos-num">20</td>
+                        <td class="left-align team-name"><img src="herby/villarreal.png" alt="" style="height: 20px; width: auto; vertical-align: middle; margin-right: 8px;">Villarreal</td>
+                        <td>0</td><td>0:0</td><td class="pts-cell">0</td>
+                    </tr>
+
+            </tbody>
+        </table>
+        <div class="legend">
+            <div class="legend-item"><div class="dot dot-blue"></div> Strefa pucharowa</div>
+            <div class="legend-item"><div class="dot dot-red"></div> Strefa spadkowa</div>
+        </div>
+    </div>
+</main>
+        <!-- BLOK DLA PREMIER LEAGUE -->
+        <div id="widok-premier" class="liga-section" style="display: none; text-align: center; padding: 40px 20px;">
+            <h2 style="justify-content: center; border-bottom: none;"><span>UK</span> Premier League</h2>
+            <p style="font-size: 1.3em; color: #666; font-weight: 500; margin-top: 15px;">Wkrótce...</p>
+        </div>
+
+
+<!-- SKRYPT UKRYWAJĄCY I PRZEŁĄCZAJĄCY TABELE -->
+<script>
+    // 1. Łapiemy wszystkie trzy sekcje ligowe ze strony
+    const sekcje = document.querySelectorAll('.liga-section');
+
+    // Chowany La Ligę (indeks 1) oraz Premier League (indeks 2) na samym starcie
+    if (sekcje.length >= 3) {
+        sekcje[1].style.display = 'none'; // Ukryj La Liga
+        sekcje[2].style.display = 'none'; // Ukryj Premier League (Wkrótce)
+    }
+
+    // 2. Bezbłędna funkcja zmieniająca widoki tabel i logotypy lig na górnym ciemnym pasku
+    function przelaczWidok(kodLigi) {
+        const logoGlowne = document.getElementById('league-logo');
+
+        if (sekcje.length >= 3) {
+            if (kodLigi === 'pl') {
+                sekcje[0].style.display = 'block'; // Pokaż Ekstraklasę
+                sekcje[1].style.display = 'none';  // Ukryj La Ligę
+                sekcje[2].style.display = 'none';  // Ukryj Premier League
+                if (logoGlowne) logoGlowne.src = 'herby/logo-ekstraklasa.png'; // Logo PL u góry
+            } else if (kodLigi === 'es') {
+                sekcje[0].style.display = 'none';  // Ukryj Ekstraklasę
+                sekcje[1].style.display = 'block'; // Pokaż La Ligę
+                sekcje[2].style.display = 'none';  // Ukryj Premier League
+                if (logoGlowne) logoGlowne.src = 'herby/logo-laliga.png';     // Logo ES u góry
+            } else if (kodLigi === 'uk') {
+                sekcje[0].style.display = 'none';  // Ukryj Ekstraklasę
+                sekcje[1].style.display = 'none';  // Ukryj La Ligę
+                sekcje[2].style.display = 'block'; // Pokaż Premier League (Wkrótce)
+                if (logoGlowne) logoGlowne.src = 'herby/logo-premier.png';    // Logo UK u góry
+            }
+        }
+    }
+
+    // 3. Obsługa kliknięć w przyciski Twoich zakładek
+    const przyciski = document.querySelectorAll('.league-btn');
+    przyciski.forEach(btn => {
+        btn.removeAttribute('onclick'); // Czyszczenie starych powiązań inline
+        
+        btn.addEventListener('click', function() {
+            // Przełączanie aktywnego podświetlenia zakładki
+            przyciski.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Odczytujemy kliknięcie na podstawie tekstu na przycisku
+            const tekst = this.innerText.toLowerCase();
+
+            if (tekst.includes('ekstraklasa')) {
+                document.getElementById('main-title').innerHTML = `<span>PL</span> PKO BP Ekstraklasa`;
+                przelaczWidok('pl');
+            } else if (tekst.includes('la liga')) {
+                document.getElementById('main-title').innerHTML = `<span>ES</span> La Liga`;
+                przelaczWidok('es');
+            } else if (tekst.includes('premier')) {
+                document.getElementById('main-title').innerHTML = `<span>UK</span> Premier League`;
+                przelaczWidok('uk');
+            }
+        });
+    });
+</script>
+
+
+
+
+
+</body>
+</html>
