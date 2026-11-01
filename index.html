@@ -227,159 +227,157 @@
 <script>
 // Prosta struktura danych - dopisujesz mecz po meczu, a JS sam pogrupuje je według "status"
 const meczeEkstraklasy = {
-    1: [
-    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Piątek, 24 lipca 2026" },
-    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Piątek, 24 lipca 2026" },
-    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Sobota, 25 lipca 2026" },
-    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Sobota, 25 lipca 2026" },
-    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Sobota, 25 lipca 2026" },
-    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Niedziela, 26 lipca 2026" },
-    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Niedziela, 26 lipca 2026" },
-    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Niedziela, 26 lipca 2026" },
-    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Poniedziałek, 27 lipca 2026" }
+     1: [
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "2 : 1", status: "Piątek, 24 lipca 2026 (Zakończono)" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "0 : 1", status: "Piątek, 24 lipca 2026 (Zakończono)" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "1 : 0", status: "Sobota, 25 lipca 2026 (Zakończono)" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "2 : 1", status: "Sobota, 25 lipca 2026 (Zakończono)" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "0 : 0", status: "Sobota, 25 lipca 2026 (Zakończono)" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "1 : 2", status: "Niedziela, 26 lipca 2026 (Zakończono)" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "2 : 2", status: "Niedziela, 26 lipca 2026 (Zakończono)" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "2 : 1", status: "Niedziela, 26 lipca 2026 (Zakończono)" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "2 : 0", status: "Poniedziałek, 27 lipca 2026 (Zakończono)" }
 ],
 
 2: [
-    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Piątek, 31 lipca 2026" },
-    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Piątek, 31 lipca 2026" },
-    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Sobota, 1 sierpnia 2026" },
-    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Sobota, 1 sierpnia 2026" },
-    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Niedziela, 2 sierpnia 2026" },
-    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Niedziela, 2 sierpnia 2026" },
-    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Niedziela, 2 sierpnia 2026" },
-    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Poniedziałek, 3 sierpnia 2026" },
-    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Wtorek, 15 września 2026" }
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "0 : 0", status: "Piątek, 31 lipca 2026 (Zakończono)" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "1 : 2", status: "Piątek, 31 lipca 2026 (Zakończono)" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "4 : 3", status: "Sobota, 1 sierpnia 2026 (Zakończono)" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "1 : 2", status: "Sobota, 1 sierpnia 2026 (Zakończono)" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "3 : 1", status: "Niedziela, 2 sierpnia 2026 (Zakończono)" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "2 : 1", status: "Niedziela, 2 sierpnia 2026 (Zakończono)" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "3 : 1", status: "Niedziela, 2 sierpnia 2026 (Zakończono)" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "0 : 2", status: "Poniedziałek, 3 sierpnia 2026 (Zakończono)" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "0 : 2", status: "Wtorek, 15 września 2026 (Zakończono)" }
 ],
 
 3: [
-    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Piątek, 7 sierpnia 2026" },
-    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Sobota, 8 sierpnia 2026" },
-    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Sobota, 8 sierpnia 2026" },
-    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Sobota, 8 sierpnia 2026" },
-    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Niedziela, 9 sierpnia 2026" },
-    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Niedziela, 9 sierpnia 2026" },
-    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Niedziela, 9 sierpnia 2026" },
-    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Wtorek, 15 września 2026" },
-    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Poniedziałek, 12 października 2026" }
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "2 : 1", status: "Piątek, 7 sierpnia 2026 (Zakończono)" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "1 : 3", status: "Sobota, 8 sierpnia 2026 (Zakończono)" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "3 : 1", status: "Sobota, 8 sierpnia 2026 (Zakończono)" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "1 : 1", status: "Sobota, 8 sierpnia 2026 (Zakończono)" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "0 : 0", status: "Niedziela, 9 sierpnia 2026 (Zakończono)" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "3 : 0", status: "Niedziela, 9 sierpnia 2026 (Zakończono)" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "0 : 2", status: "Niedziela, 9 sierpnia 2026 (Zakończono)" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "2 : 3", status: "Wtorek, 15 września 2026 (Zakończono)" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "2 : 1", status: "Poniedziałek, 12 października 2026 (Zakończono)" }
 ],
 
 4: [
-    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Piątek, 14 sierpnia 2026" },
-    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Sobota, 15 sierpnia 2026" },
-    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Sobota, 15 sierpnia 2026" },
-    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Sobota, 15 sierpnia 2026" },
-    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Niedziela, 16 sierpnia 2026" },
-    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Niedziela, 16 sierpnia 2026" },
-    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Niedziela, 16 sierpnia 2026" },
-    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Środa, 16 grudnia 2026" },
-    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Czwartek, 17 grudnia 2026" }
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "5 : 0", status: "Piątek, 14 sierpnia 2026 (Zakończono)" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "2 : 1", status: "Sobota, 15 sierpnia 2026 (Zakończono)" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "3 : 4", status: "Sobota, 15 sierpnia 2026 (Zakończono)" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "1 : 2", status: "Sobota, 15 sierpnia 2026 (Zakończono)" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "1 : 0", status: "Niedziela, 16 sierpnia 2026 (Zakończono)" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "2 : 1", status: "Niedziela, 16 sierpnia 2026 (Zakończono)" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "2 : 1", status: "Niedziela, 16 sierpnia 2026 (Zakończono)" }
 ],
 
 5: [
-    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Piątek, 21 sierpnia 2026" },
-    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Sobota, 22 sierpnia 2026" },
-    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Sobota, 22 sierpnia 2026" },
-    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Sobota, 22 sierpnia 2026" },
-    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Niedziela, 23 sierpnia 2026" },
-    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Niedziela, 23 sierpnia 2026" },
-    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Niedziela, 23 sierpnia 2026" },
-    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Czwartek, 3 września 2026" },
-    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Czwartek, 3 września 2026" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "3 : 2", status: "Piątek, 21 sierpnia 2026 (Zakończono)" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "1 : 1", status: "Sobota, 22 sierpnia 2026 (Zakończono)" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "1 : 1", status: "Sobota, 22 sierpnia 2026 (Zakończono)" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "3 : 3", status: "Sobota, 22 sierpnia 2026 (Zakończono)" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "0 : 0", status: "Niedziela, 23 sierpnia 2026 (Zakończono)" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "5 : 0", status: "Niedziela, 23 sierpnia 2026 (Zakończono)" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "2 : 2", status: "Niedziela, 23 sierpnia 2026 (Zakończono)" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "2 : 1", status: "Czwartek, 3 września 2026 (Zakończono)" },
+    { home: "Raków Częstochowa", homeLogo: "herby/pogon.png", away: "Górnik Zabrze", awayLogo: "herby/wisla-krakow.png", score: "1 : 2", status: "Czwartek, 3 września 2026 (Zakończono)" }
 ],
 
 6: [
-    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Piątek, 28 sierpnia 2026" },
-    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Piątek, 28 sierpnia 2026" },
-    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Sobota, 29 sierpnia 2026" },
-    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Sobota, 29 sierpnia 2026" },
-    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Sobota, 29 sierpnia 2026" },
-    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Sobota, 29 sierpnia 2026" },
-    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Niedziela, 30 sierpnia 2026" },
-    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Niedziela, 30 sierpnia 2026" },
-    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Niedziela, 30 sierpnia 2026" }
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "0 : 2", status: "Piątek, 28 sierpnia 2026 (Zakończono)" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "1 : 1", status: "Piątek, 28 sierpnia 2026 (Zakończono)" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "2 : 1", status: "Sobota, 29 sierpnia 2026 (Zakończono)" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "0 : 2", status: "Sobota, 29 sierpnia 2026 (Zakończono)" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "2 : 0", status: "Sobota, 29 sierpnia 2026 (Zakończono)" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "0 : 0", status: "Sobota, 29 sierpnia 2026 (Zakończono)" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "2 : 5", status: "Niedziela, 30 sierpnia 2026 (Zakończono)" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "2 : 3", status: "Niedziela, 30 sierpnia 2026 (Zakończono)" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "2 : 3", status: "Niedziela, 30 sierpnia 2026 (Zakończono)" }
 ],
 
 7: [
-    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Piątek, 4 września 2026" },
-    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Sobota, 5 września 2026" },
-    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Sobota, 5 września 2026" },
-    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Sobota, 5 września 2026" },
-    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Niedziela, 6 września 2026" },
-    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Niedziela, 6 września 2026" },
-    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Niedziela, 6 września 2026" },
-    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Poniedziałek, 7 września 2026" },
-    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Poniedziałek, 7 września 2026" }
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "3 : 0", status: "Piątek, 4 września 2026 (Zakończono)" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "0 : 0", status: "Sobota, 5 września 2026 (Zakończono)" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "1 : 1", status: "Sobota, 5 września 2026 (Zakończono)" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "2 : 3", status: "Sobota, 5 września 2026 (Zakończono)" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "0 : 1", status: "Niedziela, 6 września 2026 (Zakończono)" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "1 : 0", status: "Niedziela, 6 września 2026 (Zakończono)" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "2 : 1", status: "Niedziela, 6 września 2026 (Zakończono)" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "1 : 1", status: "Poniedziałek, 7 września 2026 (Zakończono)" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "1 : 1", status: "Poniedziałek, 7 września 2026 (Zakończono)" }
 ],
 
 8: [
-    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Piątek, 11 września 2026" },
-    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Piątek, 11 września 2026" },
-    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Sobota, 12 września 2026" },
-    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Sobota, 12 września 2026" },
-    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Sobota, 12 września 2026" },
-    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Niedziela, 13 września 2026" },
-    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Niedziela, 13 września 2026" },
-    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Niedziela, 13 września 2026" },
-    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Poniedziałek, 14 września 2026" }
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "2 : 1", status: "Piątek, 11 września 2026 (Zakończono)" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "2 : 0", status: "Piątek, 11 września 2026 (Zakończono)" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "1 : 2", status: "Sobota, 12 września 2026 (Zakończono)" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "2 : 1", status: "Sobota, 12 września 2026 (Zakończono)" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "2 : 1", status: "Sobota, 12 września 2026 (Zakończono)" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "3 : 1", status: "Niedziela, 13 września 2026 (Zakończono)" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "2 : 0", status: "Niedziela, 13 września 2026 (Zakończono)" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "1 : 1", status: "Niedziela, 13 września 2026 (Zakończono)" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "0 : 2", status: "Poniedziałek, 14 września 2026 (Zakończono)" }
 ],
 
 9: [
-    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Piątek, 18 września 2026" },
-    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Piątek, 18 września 2026" },
-    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Sobota, 19 września 2026" },
-    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Sobota, 19 września 2026" },
-    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Sobota, 19 września 2026" },
-    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Niedziela, 20 września 2026" },
-    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Niedziela, 20 września 2026" },
-    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Niedziela, 20 września 2026" },
-    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Niedziela, 20 września 2026" }
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "2 : 2", status: "Piątek, 18 września 2026 (Zakończono)" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "2 : 1", status: "Piątek, 18 września 2026 (Zakończono)" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "3 : 2", status: "Sobota, 19 września 2026 (Zakończono)" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "3 : 2", status: "Sobota, 19 września 2026 (Zakończono)" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "0 : 0", status: "Sobota, 19 września 2026 (Zakończono)" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "1 : 2", status: "Niedziela, 20 września 2026 (Zakończono)" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "0 : 2", status: "Niedziela, 20 września 2026 (Zakończono)" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "1 : 3", status: "Niedziela, 20 września 2026 (Zakończono)" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "5 : 1", status: "Niedziela, 20 września 2026 (Zakończono)" }
 ],
 
 10: [
-    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Piątek, 9 października 2026" },
-    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Piątek, 9 października 2026" },
-    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Sobota, 10 października 2026" },
-    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Sobota, 10 października 2026" },
-    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Sobota, 10 października 2026" },
-    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Niedziela, 11 października 2026" },
-    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Niedziela, 11 października 2026" },
-    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Niedziela, 11 października 2026" },
-    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Poniedziałek, 12 października 2026" }
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "3 : 0", status: "Piątek, 9 października 2026 (Zakończono)" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "1 : 4", status: "Piątek, 9 października 2026 (Zakończono)" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "3 : 1", status: "Sobota, 10 października 2026 (Zakończono)" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "1 : 4", status: "Sobota, 10 października 2026 (Zakończono)" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "1 : 3", status: "Sobota, 10 października 2026 (Zakończono)" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "2 : 1", status: "Niedziela, 11 października 2026 (Zakończono)" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "2 : 0", status: "Niedziela, 11 października 2026 (Zakończono)" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "2 : 0", status: "Niedziela, 11 października 2026 (Zakończono)" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "2 : 3", status: "Poniedziałek, 12 października 2026 (Zakończono)" }
 ],
 
 11: [
-    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Piątek, 16 października 2026" },
-    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Piątek, 16 października 2026" },
-    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Sobota, 17 października 2026" },
-    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Sobota, 17 października 2026" },
-    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Sobota, 17 października 2026" },
-    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Niedziela, 18 października 2026" },
-    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Niedziela, 18 października 2026" },
-    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Niedziela, 18 października 2026" },
-    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Poniedziałek, 19 października 2026" }
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "1 : 2", status: "Piątek, 16 października 2026 (Zakończono)" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "0 : 0", status: "Piątek, 16 października 2026 (Zakończono)" },
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "3 : 2", status: "Sobota, 17 października 2026 (Zakończono)" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "0 : 1", status: "Sobota, 17 października 2026 (Zakończono)" },
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "1 : 1", status: "Sobota, 17 października 2026 (Zakończono)" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "1 : 1", status: "Niedziela, 18 października 2026 (Zakończono)" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "1 : 0", status: "Niedziela, 18 października 2026 (Zakończono)" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "6 : 1", status: "Niedziela, 18 października 2026 (Zakończono)" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "1 : 0", status: "Poniedziałek, 19 października 2026 (Zakończono)" }
 ],
 
 12: [
-    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "00:00", status: "Piątek, 23 października 2026" },
-    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "00:00", status: "Piątek, 23 października 2026" },
-    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "00:00", status: "Sobota, 24 października 2026" },
-    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "00:00", status: "Sobota, 24 października 2026" },
-    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "00:00", status: "Sobota, 24 października 2026" },
-    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "00:00", status: "Sobota, 24 października 2026" },
-    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "00:00", status: "Niedziela, 25 października 2026" },
-    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "00:00", status: "Niedziela, 25 października 2026" },
-    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "00:00", status: "Niedziela, 25 października 2026" }
+    { home: "Motor Lublin", homeLogo: "herby/motor.png", away: "Zagłębie Lubin", awayLogo: "herby/zaglebie.png", score: "2 : 2", status: "Piątek, 23 października 2026 (Zakończono)" },
+    { home: "Widzew Łódź", homeLogo: "herby/widzew.png", away: "Górnik Zabrze", awayLogo: "herby/gornik.png", score: "1 : 1", status: "Piątek, 23 października 2026 (Zakończono)" },
+    { home: "Piast Gliwice", homeLogo: "herby/piast.png", away: "Cracovia", awayLogo: "herby/cracovia.png", score: "3 : 1", status: "Sobota, 24 października 2026 (Zakończono)" },
+    { home: "Korona Kielce", homeLogo: "herby/korona.png", away: "GKS Katowice", awayLogo: "herby/gks-katowice.png", score: "1 : 0", status: "Sobota, 24 października 2026 (Zakończono)" },
+    { home: "Pogoń Szczecin", homeLogo: "herby/pogon.png", away: "Radomiak Radom", awayLogo: "herby/radomiak.png", score: "4 : 3", status: "Sobota, 24 października 2026 (Zakończono)" },
+    { home: "Wisła Kraków", homeLogo: "herby/wisla-krakow.png", away: "Raków Częstochowa", awayLogo: "herby/rakow.png", score: "2 : 1", status: "Sobota, 24 października 2026 (Zakończono)" },
+    { home: "Śląsk Wrocław", homeLogo: "herby/slask.png", away: "Wieczysta Kraków", awayLogo: "herby/wieczysta.png", score: "2 : 0", status: "Niedziela, 25 października 2026 (Zakończono)" },
+    { home: "Jagiellonia Białystok", homeLogo: "herby/jagiellonia.png", away: "Wisła Płock", awayLogo: "herby/wisla-plock.png", score: "1 : 0", status: "Niedziela, 25 października 2026 (Zakończono)" },
+    { home: "Legia Warszawa", homeLogo: "herby/legia.png", away: "Lech Poznań", awayLogo: "herby/lech.png", score: "1 : 2", status: "Niedziela, 25 października 2026 (Zakończono)" }
 ],
 13: [
-    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "00:00", status: "Piątek, 30 października 2026" },
-    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "00:00", status: "Piątek, 30 października 2026" },
-    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "00:00", status: "Sobota, 31 października 2026" },
-    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "00:00", status: "Sobota, 31 października 2026" },
-    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "00:00", status: "Sobota, 31 października 2026" },
-    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "00:00", status: "Sobota, 31 października 2026" },
-    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "00:00", status: "Poniedziałek, 2 listopada 2026" },
-    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "00:00", status: "Poniedziałek, 2 listopada 2026" },
-    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "00:00", status: "Poniedziałek, 2 listopada 2026" }
+    { home: "Cracovia", homeLogo: "herby/cracovia.png", away: "Motor Lublin", awayLogo: "herby/motor.png", score: "1 : 2", status: "Piątek, 30 października 2026 (Zakończono)" },
+    { home: "Górnik Zabrze", homeLogo: "herby/gornik.png", away: "Legia Warszawa", awayLogo: "herby/legia.png", score: "0 : 0", status: "Piątek, 30 października 2026 (Zakończono)" },
+    { home: "Wisła Płock", homeLogo: "herby/wisla-plock.png", away: "Piast Gliwice", awayLogo: "herby/piast.png", score: "2 : 2", status: "Sobota, 31 października 2026 (Zakończono)" },
+    { home: "Wieczysta Kraków", homeLogo: "herby/wieczysta.png", away: "Jagiellonia Białystok", awayLogo: "herby/jagiellonia.png", score: "1 : 3", status: "Sobota, 31 października 2026 (Zakończono)" },
+    { home: "Lech Poznań", homeLogo: "herby/lech.png", away: "Wisła Kraków", awayLogo: "herby/wisla-krakow.png", score: "3 : 1", status: "Sobota, 31 października 2026 (Zakończono)" },
+    { home: "GKS Katowice", homeLogo: "herby/gks-katowice.png", away: "Widzew Łódź", awayLogo: "herby/widzew.png", score: "3 : 2", status: "Sobota, 31 października 2026 (Zakończono)" },
+    { home: "Zagłębie Lubin", homeLogo: "herby/zaglebie.png", away: "Korona Kielce", awayLogo: "herby/korona.png", score: "18:00", status: "Poniedziałek, 2 listopada 2026" },
+    { home: "Raków Częstochowa", homeLogo: "herby/rakow.png", away: "Pogoń Szczecin", awayLogo: "herby/pogon.png", score: "20:30", status: "Poniedziałek, 2 listopada 2026" },
+    { home: "Radomiak Radom", homeLogo: "herby/radomiak.png", away: "Śląsk Wrocław", awayLogo: "herby/slask.png", score: "18:00", status: "Poniedziałek, 2 listopada 2026" }
 ],
 
 14: [
